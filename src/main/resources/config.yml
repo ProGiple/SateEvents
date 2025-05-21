@@ -1,0 +1,36 @@
+messages:
+  dropNotActive: "Не активен!"
+  dropIsActive: "Активен!"
+  reload:
+    - ' {S}| &fВы успешно перезагрузили конфиг1'
+  inactive:
+    - ' {S}| &fИвент еще не активен!'
+  isActive:
+    - ' {S}| &fИвент уже активен!'
+  notExists:
+    - ' {S}| &fИвента [event_name] не существует!'
+  delayNext:
+    - ' '
+    - ' {S}| &fДо следующего ивента: {S}%event_next_left_time[a]%'
+    - ' '
+  delay:
+    - ' '
+    - ' {S}| &fДо ивента [event_name]: {S}[event_left_time]'
+    - ' '
+  teleport:
+    - ' {S}| &fВы телепортировались к ивенту {S}%event_now_name%'
+  locate:
+    - ' '
+    - ' {S}| &fКоординаты ивента: {S}[%event_x%, %event_y%, %event_z%]'
+    - ' {S}| &fМир локации ивента: {S}%event_world%'
+    - ' '
+  compass:
+    - ' {S}| &fВы успешно установили стрелку компаса на ивент!'
+  noCompass:
+    - ' {S}| &fВозьмите для начала в руку компас!'
+  startRandom:
+    - ' {S}| &fВы успешно запустили рандомный ивент'
+  start:
+    - ' {S}| &fВы успешно запустили ивент {S}[event_name]'
+  stop:
+    - ' {S}| &fВы успешно остановили ивент!'

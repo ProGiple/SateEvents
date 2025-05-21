@@ -1,0 +1,33 @@
+name: SateEvents
+version: '${project.version}'
+main: org.satellite.dev.progiple.sateevents.SateEvents
+api-version: '1.16'
+depend:
+  - LunaSpring
+authors:
+  - ProGiple
+commands:
+  sateevents:
+    aliases:
+      - se
+      - satee
+      - sateevent
+      - event
+      - events
+      - sevent
+      - sevents
+permissions:
+  sateevents.reload:
+    default: op
+  sateevents.delay:
+    default: op
+  sateevents.teleport:
+    default: op
+  sateevents.compass:
+    default: op
+  sateevents.locate:
+    default: op
+  sateevents.start:
+    default: op
+  sateevents.stop:
+    default: op
