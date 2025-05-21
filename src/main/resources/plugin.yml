@@ -4,6 +4,8 @@ main: org.satellite.dev.progiple.sateevents.SateEvents
 api-version: '1.16'
 depend:
   - LunaSpring
+  - WorldEdit
+  - WorldGuard
 authors:
   - ProGiple
 commands:
