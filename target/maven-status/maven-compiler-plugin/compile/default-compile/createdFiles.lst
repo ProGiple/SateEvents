@@ -1,6 +1,8 @@
 org\satellite\dev\progiple\sateevents\configs\Config.class
 org\satellite\dev\progiple\sateevents\events\SateEventManager.class
+org\satellite\dev\progiple\sateevents\OnClickOnBlockHandler.class
 org\satellite\dev\progiple\sateevents\commands\CompassSubCommand.class
+org\satellite\dev\progiple\sateevents\OnBreakBlockHandler.class
 org\satellite\dev\progiple\sateevents\SateEvents.class
 org\satellite\dev\progiple\sateevents\commands\LocateSubCommand.class
 org\satellite\dev\progiple\sateevents\events\EventBlock.class

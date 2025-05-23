@@ -2,6 +2,7 @@ package org.satellite.dev.progiple.sateevents;
 
 import lombok.Getter;
 import org.bukkit.Location;
+import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -20,6 +21,8 @@ public final class SateEvents extends LunaPlugin {
         INSTANCE = this;
         super.onEnable();
 
+        LunaExecutor.initialize(this);
+        this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler());
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.equalsIgnoreCase("next_time")) {
                 LocalTime localTime = SateEventManager.getNextTime(SateEventManager.getNext());
@@ -84,5 +87,11 @@ public final class SateEvents extends LunaPlugin {
             }
             return null;
         }));
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        SateEventManager.remove();
     }
 }

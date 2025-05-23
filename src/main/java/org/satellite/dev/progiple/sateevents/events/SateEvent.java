@@ -20,15 +20,17 @@ import org.novasparkle.lunaspring.LunaPlugin;
 import org.satellite.dev.progiple.sateevents.SateEvents;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public abstract class SateEvent {
-    @Setter private EventBlock eventBlock;
     @Setter private EventBar eventBar;
     @Setter private Location location;
     private EditSession editSession;
 
+    private final Set<EventBlock> eventBlocks = new HashSet<>();
     private final LunaPlugin lunaPlugin;
     private final int regionSize;
     private final String regionId;
@@ -54,13 +56,15 @@ public abstract class SateEvent {
                                  List<String> blacklistBiomes) {
         for (int i = 0; i < 15; i++) {
             Location location = Utils.findRandomLocation(world, maxX, maxZ);
-            if (location.getY() < minY
-                    || location.getY() > maxY
-                    || this.checkBlacklist(location.clone().add(0, -1, 0), blacklistMaterials)
-                    || this.checkRegion(location, this.regionSize)
-                    || this.checkBiome(location, blacklistBiomes)) continue;
+            if (location == null) continue;
 
-            return location;
+            Location upper = location.clone().add(0, 1, 0);
+            if (upper.getY() < minY || upper.getY() > maxY || !upper.getBlock().getType().isAir()
+                    || this.checkBlacklist(location, blacklistMaterials)
+                    || this.checkRegion(upper, this.regionSize)
+                    || this.checkBiome(upper, blacklistBiomes)) continue;
+
+            return upper;
         }
         return null;
     }
@@ -130,7 +134,7 @@ public abstract class SateEvent {
         @Override @SneakyThrows @SuppressWarnings("all")
         public void start() {
             while (this.leftSeconds > 0) {
-                if (!this.isActive()) return;
+                if (!this.isActive() || !SateEventManager.getLaunchedEvent().equals(SateEvent.this)) return;
 
                 this.leftSeconds--;
                 if (SateEvent.this.eventBar != null) SateEvent.this.eventBar.update();
@@ -138,7 +142,7 @@ public abstract class SateEvent {
                 Thread.sleep(1000L);
             }
 
-            SateEvent.this.remove();
+            SateEventManager.remove();
         }
     }
 }
