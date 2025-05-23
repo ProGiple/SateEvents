@@ -26,7 +26,7 @@ import java.util.List;
 public abstract class SateEvent {
     @Setter private EventBlock eventBlock;
     @Setter private EventBar eventBar;
-    private Location location;
+    @Setter private Location location;
     private EditSession editSession;
 
     private final LunaPlugin lunaPlugin;
