@@ -16,6 +16,6 @@ public abstract class EventManager {
     }
 
     public abstract SateEvent run();
-    public abstract void stop();
+    public abstract void run(SateEvent sateEvent);
     public abstract List<String> getTimes();
 }

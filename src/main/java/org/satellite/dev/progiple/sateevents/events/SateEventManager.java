@@ -18,16 +18,25 @@ public class SateEventManager {
         return registeredManagers.stream().filter(m -> m.getLunaPlugin().equals(lunaPlugin)).findFirst().orElse(null);
     }
 
-    public boolean run(EventManager eventManager) {
+    public boolean run(EventManager eventManager, SateEvent sateEvent) {
         if (launchedEvent != null) return false;
 
-        forceRun(eventManager);
+        forceRun(eventManager, sateEvent);
         return true;
     }
 
-    public void forceRun(EventManager eventManager) {
+    public boolean run(EventManager eventManager) {
+        return run(eventManager, eventManager.run());
+    }
+
+    public void forceRun(EventManager eventManager, SateEvent sateEvent) {
         remove();
-        launchedEvent = eventManager.run();
+        eventManager.run(sateEvent);
+        launchedEvent = sateEvent;
+    }
+
+    public void forceRun(EventManager eventManager) {
+        forceRun(eventManager, eventManager.run());
     }
 
     public EventManager getRandom() {

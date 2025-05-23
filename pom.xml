@@ -6,7 +6,7 @@
 
   <groupId>org.satellite.dev.progiple</groupId>
   <artifactId>SateEvents</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.3g</version>
   <packaging>jar</packaging>
 
   <name>SateEvents</name>
