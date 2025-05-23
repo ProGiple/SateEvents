@@ -26,7 +26,7 @@ public class SateEventManager {
     }
 
     public boolean run(EventManager eventManager) {
-        return run(eventManager, eventManager.run());
+        return run(eventManager, eventManager.createEvent());
     }
 
     public void forceRun(EventManager eventManager, SateEvent sateEvent) {
@@ -36,7 +36,7 @@ public class SateEventManager {
     }
 
     public void forceRun(EventManager eventManager) {
-        forceRun(eventManager, eventManager.run());
+        forceRun(eventManager, eventManager.createEvent());
     }
 
     public EventManager getRandom() {
