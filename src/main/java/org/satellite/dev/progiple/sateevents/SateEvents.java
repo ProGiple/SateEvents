@@ -7,9 +7,13 @@ import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.satellite.dev.progiple.sateevents.configs.Config;
+import org.satellite.dev.progiple.sateevents.events.EventBar;
 import org.satellite.dev.progiple.sateevents.events.EventManager;
 import org.satellite.dev.progiple.sateevents.events.SateEvent;
 import org.satellite.dev.progiple.sateevents.events.SateEventManager;
+import org.satellite.dev.progiple.sateevents.listeners.OnBreakBlockHandler;
+import org.satellite.dev.progiple.sateevents.listeners.OnClickOnBlockHandler;
+import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
 
 import java.time.LocalTime;
 
@@ -22,7 +26,7 @@ public final class SateEvents extends LunaPlugin {
         super.onEnable();
 
         LunaExecutor.initialize(this);
-        this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler());
+        this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler(), new OnJoinLeaveHandler());
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.equalsIgnoreCase("next_time")) {
                 LocalTime localTime = SateEventManager.getNextTime(SateEventManager.getNext());
@@ -92,6 +96,13 @@ public final class SateEvents extends LunaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+
+        SateEvent sateEvent = SateEventManager.getLaunchedEvent();
+        if (sateEvent != null) {
+            EventBar eventBar = sateEvent.getEventBar();
+            if (eventBar != null) eventBar.remove();
+        }
+
         SateEventManager.remove();
     }
 }

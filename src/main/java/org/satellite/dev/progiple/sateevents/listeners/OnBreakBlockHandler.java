@@ -1,4 +1,4 @@
-package org.satellite.dev.progiple.sateevents;
+package org.satellite.dev.progiple.sateevents.listeners;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;

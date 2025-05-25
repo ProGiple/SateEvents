@@ -38,11 +38,13 @@ public class EventBar {
         String world = location == null ? "---" : location.getWorld().getName();
 
         String ruWorldName = LSConfig.getMessage(String.format("worlds.%s", world));
+        String time = Utils.Time.timeToString(Utils.Time.parseTime(this.sateEvent.getDelay().getLeftSeconds()));
         String title = Utils.applyReplacements(this.title,
                 "event-%-" + this.sateEvent.getName(),
                 "left-%-" + this.sateEvent.getDelay().getLeftSeconds(),
                 "x-%-" + x, "y-%-" + y, "z-%-" + z, "world-%-" + world,
-                "ls-world-%-" + ruWorldName);
+                "ls-world-%-" + ruWorldName,
+                "time-%-" + time);
 
         Player player = this.bar.getPlayers().isEmpty() ? null : this.bar.getPlayers().get(0);
         this.bar.setTitle(player == null ? title : Utils.setPlaceholders(player, title));
