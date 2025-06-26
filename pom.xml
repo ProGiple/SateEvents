@@ -6,7 +6,7 @@
 
   <groupId>org.satellite.dev.progiple</groupId>
   <artifactId>SateEvents</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.8</version>
   <packaging>jar</packaging>
 
   <name>SateEvents</name>
@@ -84,7 +84,7 @@
       <dependency>
           <groupId>com.github.NovaSparkle</groupId>
           <artifactId>LunaSpring</artifactId>
-          <version>3.4.1</version>
+          <version>3.5.2</version>
           <scope>provided</scope>
       </dependency>
       <dependency>

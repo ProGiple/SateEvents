@@ -95,8 +95,6 @@ public final class SateEvents extends LunaPlugin {
 
     @Override
     public void onDisable() {
-        super.onDisable();
-
         SateEvent sateEvent = SateEventManager.getLaunchedEvent();
         if (sateEvent != null) {
             EventBar eventBar = sateEvent.getEventBar();
@@ -104,5 +102,6 @@ public final class SateEvents extends LunaPlugin {
         }
 
         SateEventManager.remove();
+        super.onDisable();
     }
 }

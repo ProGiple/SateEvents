@@ -10,10 +10,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.novasparkle.lunaspring.API.eventManagment.SFlag;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
-import org.novasparkle.lunaspring.API.util.service.managers.RegionManager;
 import org.novasparkle.lunaspring.API.util.service.managers.WorldEditManager;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LFlag;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.RegionManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -108,7 +108,7 @@ public abstract class SateEvent {
             ProtectedRegion region = RegionManager.getRegion(this.regionId);
             if (flagList != null) flagList.forEach(f -> {
                 String[] split = f.split(" <> ");
-                if (split.length >= 2) region.setFlag(SFlag.valueOf(split[0]).getStateFlag(), StateFlag.State.valueOf(split[1]));
+                if (split.length >= 2) region.setFlag(LFlag.valueOf(split[0]).getStateFlag(), StateFlag.State.valueOf(split[1]));
             });
         });
     }

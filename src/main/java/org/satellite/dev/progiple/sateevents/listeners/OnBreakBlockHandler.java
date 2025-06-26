@@ -20,6 +20,9 @@ public class OnBreakBlockHandler implements Listener {
                 .stream()
                 .filter(b -> b.getBlock().equals(block))
                 .findFirst()
-                .ifPresent(eventBlock -> e.setCancelled(true));
+                .ifPresent(eventBlock -> {
+                    e.setCancelled(true);
+                    eventBlock.onBreak(e);
+                });
     }
 }
