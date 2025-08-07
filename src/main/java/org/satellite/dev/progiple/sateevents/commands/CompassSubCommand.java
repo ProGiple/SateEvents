@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CompassMeta;
 import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
 import org.novasparkle.lunaspring.API.commands.ZeroArgCommand;
@@ -31,7 +32,11 @@ public class CompassSubCommand implements Invocation {
             return;
         }
 
-        player.setCompassTarget(sateEvent.getLocation());
+        CompassMeta compassMeta = (CompassMeta) itemStack.getItemMeta();
+        compassMeta.setLodestone(sateEvent.getLocation());
+        compassMeta.setLodestoneTracked(false);
+        itemStack.setItemMeta(compassMeta);
+
         Config.sendMessage(player, "compass");
     }
 }

@@ -18,7 +18,7 @@ public class StopSubCommand implements Invocation {
         SateEvent activeEvent = SateEventManager.getLaunchedEvent();
         EventManager eventManager = args.length == 1 ? (activeEvent == null ? null :
                 SateEventManager.getManager(activeEvent.getLunaPlugin())) :
-                SateEventManager.getManager(LunaSpring.getINSTANCE().getLunaPlugin(args[1]));
+                SateEventManager.getManager(LunaSpring.getInstance().getLunaPlugin(args[1]));
 
         if (eventManager == null || activeEvent == null) {
             Config.sendMessage(sender, "inactive");

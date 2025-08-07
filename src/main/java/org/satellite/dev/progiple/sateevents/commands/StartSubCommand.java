@@ -36,7 +36,7 @@ public class StartSubCommand implements LunaCompleter {
             return;
         }
 
-        LunaPlugin lunaPlugin = LunaSpring.getINSTANCE().getLunaPlugin(args[1]);
+        LunaPlugin lunaPlugin = LunaSpring.getInstance().getLunaPlugin(args[1]);
         if (lunaPlugin == null) {
             Config.sendMessage(sender, "notExists", "event_name-%-" + args[1], args[2]);
             return;

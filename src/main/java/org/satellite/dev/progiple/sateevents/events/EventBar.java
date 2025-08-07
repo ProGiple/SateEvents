@@ -11,7 +11,9 @@ import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.LSConfig;
+import org.satellite.dev.progiple.sateevents.SateEvents;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 @Getter
@@ -19,12 +21,11 @@ public class EventBar {
     private final KeyedBossBar bar;
     private final SateEvent sateEvent;
     private final String title;
-
-    @SuppressWarnings("deprecation")
     public EventBar(SateEvent sateEvent, BarColor barColor, BarStyle barStyle, String title) {
         this.title = ColorManager.color(title);
 
-        this.bar = Bukkit.createBossBar(NamespacedKey.randomKey(), this.title, barColor, barStyle);
+        NamespacedKey key = new NamespacedKey(SateEvents.getINSTANCE(), UUID.randomUUID().toString());
+        this.bar = Bukkit.createBossBar(key, this.title, barColor, barStyle);
         this.sateEvent = sateEvent;
 
         this.update();

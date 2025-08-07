@@ -25,7 +25,7 @@ public final class SateEvents extends LunaPlugin {
         INSTANCE = this;
         super.onEnable();
 
-        LunaExecutor.initialize(this);
+        LunaExecutor.initialize(this, "org.satellite.dev.progiple.sateevents.commands");
         this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler(), new OnJoinLeaveHandler());
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.equalsIgnoreCase("next_time")) {

@@ -12,8 +12,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.WorldEditManager;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LFlag;
-import org.novasparkle.lunaspring.API.util.service.managers.worldguard.RegionManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -70,7 +70,7 @@ public abstract class SateEvent {
     }
 
     public boolean checkRegion(Location location, int cuboidSize) {
-        return cuboidSize > -1 && RegionManager.hasRegionsInside(location, cuboidSize + 1);
+        return cuboidSize > -1 && GuardManager.hasRegionsInside(location, cuboidSize + 1);
     }
 
     public boolean checkBiome(Location location, List<String> biomes) {
@@ -103,18 +103,18 @@ public abstract class SateEvent {
         Location maxLoc = this.location.clone().add(regionSize, regionSize, regionSize);
 
         Bukkit.getScheduler().runTask(SateEvents.getINSTANCE(), () -> {
-            RegionManager.createRegion(this.regionId, minLoc, maxLoc);
+            GuardManager.createRegion(this.regionId, minLoc, maxLoc);
 
-            ProtectedRegion region = RegionManager.getRegion(this.regionId);
+            ProtectedRegion region = GuardManager.getRegion(this.regionId);
             if (flagList != null) flagList.forEach(f -> {
                 String[] split = f.split(" <> ");
-                if (split.length >= 2) region.setFlag(LFlag.valueOf(split[0]).getStateFlag(), StateFlag.State.valueOf(split[1]));
+                if (split.length >= 2) region.setFlag(GuardManager.getWGFlag(LFlag.valueOf(split[0])), StateFlag.State.valueOf(split[1]));
             });
         });
     }
 
     public void removeRegion() {
-        if (this.regionId != null) RegionManager.removeRegion(this.regionId);
+        if (this.regionId != null) GuardManager.removeRegion(this.regionId);
     }
 
     public void removeSchematic() {
