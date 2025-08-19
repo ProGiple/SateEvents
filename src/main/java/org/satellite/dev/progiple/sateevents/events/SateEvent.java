@@ -1,8 +1,8 @@
 package org.satellite.dev.progiple.sateevents.events;
 
-import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -11,15 +11,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
-import org.novasparkle.lunaspring.API.util.service.managers.WorldEditManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LFlag;
 import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
+import org.satellite.dev.progiple.sateevents.SSchem;
 import org.satellite.dev.progiple.sateevents.SateEvents;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,8 +27,8 @@ import java.util.Set;
 public abstract class SateEvent {
     @Setter private EventBar eventBar;
     @Setter private Location location;
-    private EditSession editSession;
 
+    private final SSchem schem;
     private final Set<EventBlock> eventBlocks = new HashSet<>();
     private final LunaPlugin lunaPlugin;
     private final int regionSize;
@@ -42,6 +41,7 @@ public abstract class SateEvent {
         this.name = ColorManager.color(name);
         this.regionId = "drop-" + Utils.getRKey((byte) 12);
         this.regionSize = regionSize;
+        this.schem = Utils.isPluginEnabled("SateSchematics") ? new SSchem() : null;
     }
 
     public abstract void create();
@@ -81,20 +81,15 @@ public abstract class SateEvent {
         return blacklist != null && blacklist.contains(location.getBlock().getType().name());
     }
 
-    public void insertSchematic(ConfigurationSection schemSection, File schemDir) {
-        if (!schemSection.getBoolean("enabled") || this.location == null || this.editSession != null) return;
+    public void insertSchematic(ConfigurationSection schemSection) {
+        if (!schemSection.getBoolean("enabled")) return;
 
-        File file = new File(schemDir, String.format("%s.schem", schemSection.getString("id")));
-        if (!file.exists() || file.isDirectory()) return;
+        String id = schemSection.getString("id");
+        this.insertSchematic(id);
+    }
 
-        ConfigurationSection offsets = schemSection.getConfigurationSection("offsets");
-        assert offsets != null;
-        Bukkit.getScheduler().runTask(SateEvents.getINSTANCE(), () -> this.editSession = WorldEditManager.pasteSchematic(
-                file, this.location,
-                offsets.getInt("x"),
-                offsets.getInt("y"),
-                offsets.getInt("z"),
-                offsets.getBoolean("ignore_air_blocks")));
+    public void insertSchematic(String id) {
+        if (this.schem != null && this.location != null) this.schem.place(id, this.location);
     }
 
     public void createRegion(int regionSize, List<String> flagList) {
@@ -118,7 +113,7 @@ public abstract class SateEvent {
     }
 
     public void removeSchematic() {
-        if (this.editSession != null && this.location != null) WorldEditManager.undo(this.editSession, this.location.getWorld());
+        if (this.schem != null) this.schem.undo();
     }
 
     @Getter

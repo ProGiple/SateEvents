@@ -1,11 +1,12 @@
 name: SateEvents
-version: '1.0.8'
+version: '1.0.10'
 main: org.satellite.dev.progiple.sateevents.SateEvents
 api-version: '1.16'
 depend:
   - LunaSpring
-  - WorldEdit
   - WorldGuard
+softdepend:
+  - SateSchematics
 authors:
   - ProGiple
 commands:

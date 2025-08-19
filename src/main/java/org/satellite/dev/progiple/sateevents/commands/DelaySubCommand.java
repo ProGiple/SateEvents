@@ -2,7 +2,7 @@ package org.satellite.dev.progiple.sateevents.commands;
 
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.LunaCompleter;
-import org.novasparkle.lunaspring.API.commands.annotations.Check;
+import org.novasparkle.lunaspring.API.commands.annotations.Permissions;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SubCommand(commandIdentifiers = {"delay"}, appliedCommand = "sateevents")
-@Check(permissions = "sateevents.delay", flags = {})
+@Permissions("@.delay")
 public class DelaySubCommand implements LunaCompleter {
     @Override
     public void invoke(CommandSender sender, String[] args) {
@@ -46,7 +46,7 @@ public class DelaySubCommand implements LunaCompleter {
             LocalTime next = Utils.Time.getNextTime(eventManager.getTimes());
             Config.sendMessage(sender, "delay", "event_name-%-" + eventManager.getName(),
                     "event_time-%-" + next.toString(),
-                    "event_time_left-%-" + Utils.Time.getTimeBetween(LocalTime.now(), next).toString());
+                    "event_time_left-%-" + Utils.Time.getTimeBetween(next));
         }
     }
 

@@ -75,7 +75,7 @@ public class SateEventManager {
                 .orElse(null);
     }
 
-    public LocalTime getLeftTime(EventManager eventManager) {
-        return eventManager == null ? null : Utils.Time.getTimeBetween(LocalTime.now(), getNextTime(eventManager));
+    public String getLeftTime(EventManager eventManager) {
+        return eventManager == null ? null : Utils.Time.getTimeBetween(getNextTime(eventManager));
     }
 }

@@ -25,7 +25,7 @@ public final class SateEvents extends LunaPlugin {
         INSTANCE = this;
         super.onEnable();
 
-        LunaExecutor.initialize(this, "org.satellite.dev.progiple.sateevents.commands");
+        LunaExecutor.initialize(this, "#.commands");
         this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler(), new OnJoinLeaveHandler());
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.equalsIgnoreCase("next_time")) {
@@ -44,8 +44,8 @@ public final class SateEvents extends LunaPlugin {
             }
 
             if (params.equalsIgnoreCase("next_left_time")) {
-                LocalTime localTime = SateEventManager.getLeftTime(SateEventManager.getNext());
-                return localTime == null ? "no" : Utils.Time.timeToString(localTime); // Время до след. ивента
+                String localTime = SateEventManager.getLeftTime(SateEventManager.getNext());
+                return localTime == null ? "no" : localTime; // Время до след. ивента
             }
 
             if (params.equalsIgnoreCase("active")) {
@@ -97,6 +97,9 @@ public final class SateEvents extends LunaPlugin {
     public void onDisable() {
         SateEvent sateEvent = SateEventManager.getLaunchedEvent();
         if (sateEvent != null) {
+            SateEvent.Delay delay = sateEvent.getDelay();
+            if (delay != null) delay.cancel();
+
             EventBar eventBar = sateEvent.getEventBar();
             if (eventBar != null) eventBar.remove();
         }

@@ -3,6 +3,7 @@ package org.satellite.dev.progiple.sateevents.commands;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.LunaCompleter;
 import org.novasparkle.lunaspring.API.commands.annotations.Check;
+import org.novasparkle.lunaspring.API.commands.annotations.Permissions;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SubCommand(commandIdentifiers = {"start"}, appliedCommand = "sateevents")
-@Check(permissions = "sateevents.start", flags = {})
+@Permissions("@.start")
 public class StartSubCommand implements LunaCompleter {
     @Override
     public void invoke(CommandSender sender, String[] args) {
