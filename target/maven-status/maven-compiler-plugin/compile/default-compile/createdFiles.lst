@@ -5,6 +5,7 @@ org\satellite\dev\progiple\sateevents\SSchem.class
 org\satellite\dev\progiple\sateevents\commands\CompassSubCommand.class
 org\satellite\dev\progiple\sateevents\SateEvents.class
 org\satellite\dev\progiple\sateevents\commands\LocateSubCommand.class
+org\satellite\dev\progiple\sateevents\events\SateEvent$BlockFilter.class
 org\satellite\dev\progiple\sateevents\events\EventBlock.class
 org\satellite\dev\progiple\sateevents\events\SateEvent$Delay.class
 org\satellite\dev\progiple\sateevents\events\EventBar.class

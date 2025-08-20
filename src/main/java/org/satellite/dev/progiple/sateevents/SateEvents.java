@@ -91,6 +91,11 @@ public final class SateEvents extends LunaPlugin {
             }
             return null;
         }));
+
+        if (Utils.isPluginEnabled("SateSchematics")) {
+            SSchem schem = new SSchem();
+            schem.safeRemove();
+        }
     }
 
     @Override
