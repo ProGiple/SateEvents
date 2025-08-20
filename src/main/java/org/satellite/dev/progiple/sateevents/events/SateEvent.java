@@ -52,21 +52,32 @@ public abstract class SateEvent {
                                  int maxY,
                                  int minY,
                                  int maxZ,
-                                 List<String> blacklistMaterials,
-                                 List<String> blacklistBiomes) {
+                                 List<String> materials,
+                                 List<String> blacklistBiomes,
+                                 BlockFilter filter) {
         for (int i = 0; i < 15; i++) {
             Location location = Utils.findRandomLocation(world, maxX, maxZ);
             if (location == null) continue;
 
             Location upper = location.clone().add(0, 1, 0);
             if (upper.getY() < minY || upper.getY() > maxY || !upper.getBlock().getType().isAir()
-                    || this.checkBlacklist(location, blacklistMaterials)
+                    || this.checkMaterial(location, materials, filter)
                     || this.checkRegion(upper, this.regionSize)
                     || this.checkBiome(upper, blacklistBiomes)) continue;
 
             return upper;
         }
         return null;
+    }
+
+    public Location initLocation(World world,
+                                 int maxX,
+                                 int maxY,
+                                 int minY,
+                                 int maxZ,
+                                 List<String> materials,
+                                 List<String> blacklistBiomes) {
+        return this.initLocation(world, maxX, maxY, minY, maxZ, materials, blacklistBiomes, BlockFilter.BLACK);
     }
 
     public boolean checkRegion(Location location, int cuboidSize) {
@@ -77,8 +88,10 @@ public abstract class SateEvent {
         return biomes != null && biomes.contains(location.getBlock().getBiome().name());
     }
 
-    public boolean checkBlacklist(Location location, List<String> blacklist) {
-        return blacklist != null && blacklist.contains(location.getBlock().getType().name());
+    public boolean checkMaterial(Location location, List<String> list, BlockFilter filter) {
+        String material = location.getBlock().getType().name();
+        if (filter == BlockFilter.WHITE) return list == null || !list.contains(material);
+        return list != null && list.contains(material);
     }
 
     public void insertSchematic(ConfigurationSection schemSection) {
@@ -89,7 +102,9 @@ public abstract class SateEvent {
     }
 
     public void insertSchematic(String id) {
-        if (this.schem != null && this.location != null) this.schem.place(id, this.location);
+        if (this.schem != null && this.location != null) {
+            Bukkit.getScheduler().runTask(SateEvents.getINSTANCE(), () -> this.schem.place(id, this.location));
+        }
     }
 
     public void createRegion(int regionSize, List<String> flagList) {
@@ -139,5 +154,10 @@ public abstract class SateEvent {
 
             SateEventManager.remove();
         }
+    }
+
+    public enum BlockFilter {
+        WHITE,
+        BLACK
     }
 }
