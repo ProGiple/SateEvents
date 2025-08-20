@@ -113,9 +113,7 @@ public abstract class SateEvent {
         Location maxLoc = this.location.clone().add(regionSize, regionSize, regionSize);
 
         Bukkit.getScheduler().runTask(SateEvents.getINSTANCE(), () -> {
-            GuardManager.createRegion(this.regionId, minLoc, maxLoc);
-
-            ProtectedRegion region = GuardManager.getRegion(this.regionId);
+            ProtectedRegion region = GuardManager.createRegion(this.regionId, minLoc, maxLoc);
             if (flagList != null) flagList.forEach(f -> {
                 String[] split = f.split(" <> ");
                 if (split.length >= 2) region.setFlag(GuardManager.getWGFlag(LFlag.valueOf(split[0])), StateFlag.State.valueOf(split[1]));
