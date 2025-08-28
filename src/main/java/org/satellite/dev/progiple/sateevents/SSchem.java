@@ -8,7 +8,7 @@ import org.satellite.dev.progiple.sateschematics.schems.pasted.PastedSchematic;
 import org.satellite.dev.progiple.sateschematics.schems.states.SchematicManager;
 
 public class SSchem {
-    private final Configuration config = new Configuration(SateEvents.getINSTANCE().getDataFolder(), "sync.yml");
+    private final Configuration config = new Configuration(SateEvents.getINSTANCE().getDataFolder(), "sync");
     private PastedSchematic schematic;
 
     public void place(String id, Location location) {

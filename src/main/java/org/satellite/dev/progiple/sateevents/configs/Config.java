@@ -24,4 +24,8 @@ public class Config {
     public String getMessage(String id) {
         return ColorManager.color(config.getString("messages." + id));
     }
+
+    public int getFindLocAtt() {
+        return config.getInt("findLocationAttempts");
+    }
 }

@@ -18,6 +18,7 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.satellite.dev.progiple.sateevents.SSchem;
 import org.satellite.dev.progiple.sateevents.SateEvents;
+import org.satellite.dev.progiple.sateevents.configs.Config;
 
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +40,7 @@ public abstract class SateEvent {
         this.lunaPlugin = lunaPlugin;
         this.delay = new Delay(lifeTime);
         this.name = ColorManager.color(name);
-        this.regionId = "drop-" + Utils.getRKey((byte) 12);
+        this.regionId = "sateevent-" + Utils.getRKey((byte) 12);
         this.regionSize = regionSize;
         this.schem = Utils.isPluginEnabled("SateSchematics") ? new SSchem() : null;
     }
@@ -55,7 +56,7 @@ public abstract class SateEvent {
                                  List<String> materials,
                                  List<String> blacklistBiomes,
                                  BlockFilter filter) {
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < Math.max(Config.getFindLocAtt(), 15); i++) {
             Location location = Utils.findRandomLocation(world, maxX, maxZ);
             if (location == null) continue;
 
@@ -78,6 +79,28 @@ public abstract class SateEvent {
                                  List<String> materials,
                                  List<String> blacklistBiomes) {
         return this.initLocation(world, maxX, maxY, minY, maxZ, materials, blacklistBiomes, BlockFilter.BLACK);
+    }
+
+    public Location initLocation(ConfigurationSection section, World world) {
+        int maxX = section.getInt("maxX");
+        int maxY = section.getInt("maxY");
+        int maxZ = section.getInt("maxZ");
+        int minY = section.getInt("minY");
+        List<String> biome_blacklist = section.getStringList("invalid_biomes");
+        List<String> materials = section.getStringList("filter_blocks");
+        BlockFilter filter = Utils.getEnumValue(BlockFilter.class, section.getString("block_filter"), BlockFilter.BLACK);
+
+        ConfigurationSection schemSection = section.getConfigurationSection("schematic");
+        int offsetX = 0;
+        int offsetY = 0;
+        int offsetZ = 0;
+        if (schemSection != null) {
+            offsetY = schemSection.getInt("y");
+            offsetZ = schemSection.getInt("z");
+            offsetX = schemSection.getInt("x");
+        }
+
+        return this.initLocation(world, maxX, maxY, minY, maxZ, materials, biome_blacklist, filter).add(offsetX, offsetY, offsetZ);
     }
 
     public boolean checkRegion(Location location, int cuboidSize) {

@@ -1,9 +1,12 @@
 package org.satellite.dev.progiple.sateevents;
 
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.satellite.dev.progiple.sateevents.configs.Config;
@@ -16,6 +19,8 @@ import org.satellite.dev.progiple.sateevents.listeners.OnClickOnBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
 
 import java.time.LocalTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class SateEvents extends LunaPlugin {
     @Getter private static SateEvents INSTANCE;
@@ -96,6 +101,16 @@ public final class SateEvents extends LunaPlugin {
             SSchem schem = new SSchem();
             schem.safeRemove();
         }
+
+        Bukkit.getScheduler().runTask(this, () -> {
+            for (RegionManager manager : GuardManager.getRegionContainer().getLoaded()) {
+                Set<String> toRemove = manager.getRegions().keySet().stream()
+                        .filter(id -> id.startsWith("sateevent-"))
+                        .collect(Collectors.toSet());
+
+                for (String id : toRemove) manager.removeRegion(id);
+            }
+        });
     }
 
     @Override

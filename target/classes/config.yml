@@ -1,3 +1,4 @@
+findLocationAttempts: 55
 messages:
   dropNotActive: "Не активен!"
   dropIsActive: "Активен!"
