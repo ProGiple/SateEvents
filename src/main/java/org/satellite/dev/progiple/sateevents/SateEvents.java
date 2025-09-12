@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
+import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.satellite.dev.progiple.sateevents.configs.Config;
@@ -33,6 +34,13 @@ public final class SateEvents extends LunaPlugin {
         LunaExecutor.initialize(this, "#.commands");
         this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler(), new OnJoinLeaveHandler());
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
+            if (params.contains("[tr]")) {
+                String value = Utils.setNakedPlaceholders(offlinePlayer, "event_" + params.replace("[tr]", ""));
+
+                String localize = Localization.localize(value);
+                return localize == null ? value : ColorManager.color(localize);
+            }
+
             if (params.equalsIgnoreCase("next_time")) {
                 LocalTime localTime = SateEventManager.getNextTime(SateEventManager.getNext());
                 return localTime == null ? "no" : Utils.Time.timeToString(localTime); // Время след. ивента
@@ -53,46 +61,58 @@ public final class SateEvents extends LunaPlugin {
                 return localTime == null ? "no" : localTime; // Время до след. ивента
             }
 
-            if (params.equalsIgnoreCase("active")) {
-                return SateEventManager.getLaunchedEvent() == null ? "no" : "yes"; // Активен ли сейчас любой ивент
-            }
-
             SateEvent sateEvent = SateEventManager.getLaunchedEvent();
-            if (params.equalsIgnoreCase("now_name")) {
-                return sateEvent == null ? Config.getMessage("dropNotActive") : sateEvent.getName(); // Имя активного ивента
-            }
-
-            if (params.equalsIgnoreCase("now_id")) {
-                return sateEvent == null ? Config.getMessage("dropNotActive") : sateEvent.getLunaPlugin().getName();
-            }
-
-            if (params.equalsIgnoreCase("left_time")) {
-                return sateEvent == null ? Config.getMessage("dropNotActive") : Utils.Time.timeToString(
-                        Utils.Time.parseTime(sateEvent.getDelay().getLeftSeconds()));
-                // Время, которое осталось до окончания ивента
+            if (params.equalsIgnoreCase("active")) {
+                return sateEvent == null ? "no" : "yes"; // Активен ли сейчас любой ивент
             }
 
             if (params.endsWith("[a]")) {
-                return sateEvent == null ? Utils.setPlaceholders(offlinePlayer,
-                        "%event_" + params.replace("[a]", "") + "%") :
-                        Config.getMessage("dropIsActive"); // Проверка на активность ивента
+                return sateEvent == null ?
+                        Utils.setNakedPlaceholders(offlinePlayer, "event_" + params.replace("[a]", "")) :
+                        Config.getMessage("dropIsActive");
             }
 
-            Location location = sateEvent == null ? null : sateEvent.getLocation();
+            if (params.endsWith("[!a]")) {
+                return sateEvent != null ?
+                        Utils.setNakedPlaceholders(offlinePlayer, "event_" + params.replace("[!a]", "")) :
+                        Config.getMessage("dropNotActive");
+            }
+
+            if (sateEvent == null) {
+                return Config.getMessage("dropNotActive");
+            }
+
+            if (params.equalsIgnoreCase("now_name")) {
+                return sateEvent.getName(); // Имя активного ивента
+            }
+
+            if (params.equalsIgnoreCase("now_id")) {
+                return sateEvent.getLunaPlugin().getName();
+            }
+
+            if (params.equalsIgnoreCase("left_time")) {
+                return Utils.Time.timeToString(Utils.Time.parseTime(sateEvent.getDelay().getLeftSeconds()));
+            }
+
+            Location location = sateEvent.getLocation();
+            if (location == null) {
+                return "---";
+            }
+
             if (params.equalsIgnoreCase("x")) {
-                return location == null ? "---" : String.valueOf(location.getBlockX());
+                return String.valueOf(location.getBlockX());
             }
 
             if (params.equalsIgnoreCase("y")) {
-                return location == null ? "---" : String.valueOf(location.getBlockY());
+                return String.valueOf(location.getBlockY());
             }
 
             if (params.equalsIgnoreCase("z")) {
-                return location == null ? "---" : String.valueOf(location.getBlockZ());
+                return String.valueOf(location.getBlockZ());
             }
 
             if (params.equalsIgnoreCase("world")) {
-                return location == null ? "---" : location.getWorld().getName();
+                return location.getWorld().getName();
             }
             return null;
         }));

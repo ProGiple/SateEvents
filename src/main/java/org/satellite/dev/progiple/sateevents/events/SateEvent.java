@@ -170,10 +170,14 @@ public abstract class SateEvent {
                 this.leftSeconds--;
                 if (SateEvent.this.eventBar != null) SateEvent.this.eventBar.update();
 
+                this.timerAction();
                 Thread.sleep(1000L);
             }
 
             SateEventManager.remove();
+        }
+
+        public void timerAction() {
         }
     }
 
