@@ -1,37 +1,27 @@
-findLocationAttempts: 55
+findLocationAttempts: 20
 messages:
   dropNotActive: "Не активен!"
   dropIsActive: "Активен!"
-  reload:
-    - ' {S}| &fВы успешно перезагрузили конфиг1'
-  inactive:
-    - ' {S}| &fИвент еще не активен!'
-  isActive:
-    - ' {S}| &fИвент уже активен!'
-  notExists:
-    - ' {S}| &fИвента [event_name] не существует!'
+  reload: '{SP} Вы успешно перезагрузили плагин!'
+  inactive: '{SP} Ивент еще не активен!'
+  isActive: '{SP} Ивент уже активен!'
+  notExists: '{E}{SPR} Ивента {E}[event_name] &fне существует!'
   delayNext:
     - ' '
-    - ' {S}| &fДо следующего ивента: {S}%event_next_left_time[a]%'
+    - '{SP} Следующий ивент будет в {S}%event_next_time[a]%'
     - ' '
   delay:
     - ' '
-    - ' {S}| &fДо ивента [event_name]: {S}[event_left_time]'
+    - '{SP} Ивент [event_name] &fбудет в {S}[event_time_left]'
     - ' '
-  teleport:
-    - ' {S}| &fВы телепортировались к ивенту {S}%event_now_name%'
+  teleport: '{SP} Вы телепортировались к ивенту {S}%event_now_name%'
   locate:
     - ' '
-    - ' {S}| &fКоординаты ивента: {S}[%event_x%, %event_y%, %event_z%]'
-    - ' {S}| &fМир локации ивента: {S}%event_world%'
+    - '[RUNCOMMAND] {SP} Координаты ивента: *%*{S}[ %event_x%; %event_y%; %event_z% ]*%*/event tp*%*'
+    - '{SP} Мир локации ивента: {S}%lunaspring_localize-worlds.{event_world}%'
     - ' '
-  compass:
-    - ' {S}| &fВы успешно установили стрелку компаса на ивент!'
-  noCompass:
-    - ' {S}| &fВозьмите для начала в руку компас!'
-  startRandom:
-    - ' {S}| &fВы успешно запустили рандомный ивент'
-  start:
-    - ' {S}| &fВы успешно запустили ивент {S}[event_name]'
-  stop:
-    - ' {S}| &fВы успешно остановили ивент!'
+  compass: '{L}{SPR} Вы успешно установили стрелку компаса на {L}ивент!'
+  noCompass: '{E}{SPR} Возьмите для начала в руку компас!'
+  startRandom: '{E}{SPR} Вы успешно запустили рандомный ивент!'
+  start: '{SP} Вы успешно запустили ивент {S}[event_name]'
+  stop: '{SP} Вы успешно остановили ивент!'

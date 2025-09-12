@@ -31,6 +31,8 @@ public final class SateEvents extends LunaPlugin {
         INSTANCE = this;
         super.onEnable();
 
+        saveDefaultConfig();
+
         LunaExecutor.initialize(this, "#.commands");
         this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler(), new OnJoinLeaveHandler());
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
