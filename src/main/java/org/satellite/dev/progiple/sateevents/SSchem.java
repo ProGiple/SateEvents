@@ -1,5 +1,6 @@
 package org.satellite.dev.progiple.sateevents;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.configuration.Configuration;
@@ -15,11 +16,15 @@ public class SSchem {
         YAMLSchematic yamlSchematic = SchematicManager.getSchem(id);
         if (yamlSchematic == null || this.schematic != null) return;
 
-        this.schematic = yamlSchematic.paste(location, null);
+        Bukkit.getScheduler().runTask(SateEvents.getINSTANCE(), () -> {
+            this.schematic = yamlSchematic.paste(location, null);
 
-        ConfigurationSection section = config.createSection((String) null, "schem");
-        this.schematic.save(section);
-        this.config.save();
+            Bukkit.getScheduler().runTaskLaterAsynchronously(SateEvents.getINSTANCE(), () -> {
+                ConfigurationSection section = config.createSection((String) null, "schem");
+                this.schematic.save(section);
+                this.config.save();
+            }, 8L);
+        });
     }
 
     public void undo() {

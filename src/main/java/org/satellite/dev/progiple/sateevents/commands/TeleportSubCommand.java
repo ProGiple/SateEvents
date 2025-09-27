@@ -6,14 +6,14 @@ import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.commands.annotations.TabCompleteIgnore;
-import org.novasparkle.lunaspring.API.commands.processor.ZeroArgCommand;
+import org.novasparkle.lunaspring.API.commands.processor.NoArgCommand;
 import org.satellite.dev.progiple.sateevents.configs.Config;
 import org.satellite.dev.progiple.sateevents.events.SateEvent;
 import org.satellite.dev.progiple.sateevents.events.SateEventManager;
 
 @SubCommand(commandIdentifiers = {"teleport", "tp"}, appliedCommand = "sateevents")
 @TabCompleteIgnore("tp")
-@Check(permissions = "@.teleport", flags = ZeroArgCommand.AccessFlag.PLAYER_ONLY)
+@Check(permissions = "@.teleport", flags = NoArgCommand.AccessFlag.PLAYER_ONLY)
 public class TeleportSubCommand implements Invocation {
     @Override
     public void invoke(CommandSender sender, String[] args) {

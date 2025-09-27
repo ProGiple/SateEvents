@@ -4,6 +4,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
@@ -33,7 +34,7 @@ public final class SateEvents extends LunaPlugin {
 
         saveDefaultConfig();
 
-        LunaExecutor.initialize(this, "#.commands");
+        CommandInitializer.initialize(this, "#.commands");
         this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler(), new OnJoinLeaveHandler());
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.contains("[tr]")) {
@@ -43,9 +44,23 @@ public final class SateEvents extends LunaPlugin {
                 return localize == null ? value : ColorManager.color(localize);
             }
 
-            if (params.equalsIgnoreCase("next_time")) {
-                LocalTime localTime = SateEventManager.getNextTime(SateEventManager.getNext());
+            if (params.startsWith("next_time")) {
+                LocalTime localTime;
+
+                String[] split = params.split("-");
+                if (split.length <= 1) {
+                    localTime = SateEventManager.getNextTime(SateEventManager.getNext());
+                }
+                else {
+                    localTime = SateEventManager.getNextTime(SateEventManager.getManager(split[1]));
+                }
+
                 return localTime == null ? "no" : Utils.Time.timeToString(localTime); // Время след. ивента
+            }
+
+            if (params.startsWith("name-")) {
+                EventManager eventManager = SateEventManager.getManager(params.replace("name-", ""));
+                return eventManager == null ? "no" : ColorManager.color(eventManager.getName());
             }
 
             if (params.equalsIgnoreCase("next_name")) {

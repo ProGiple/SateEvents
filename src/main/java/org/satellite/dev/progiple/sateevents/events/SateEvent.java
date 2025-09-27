@@ -126,7 +126,7 @@ public abstract class SateEvent {
 
     public void insertSchematic(String id) {
         if (this.schem != null && this.location != null) {
-            Bukkit.getScheduler().runTask(SateEvents.getINSTANCE(), () -> this.schem.place(id, this.location));
+            this.schem.place(id, this.location);
         }
     }
 
@@ -135,12 +135,10 @@ public abstract class SateEvent {
         Location minLoc = this.location.clone().add(-regionSize, -regionSize, -regionSize);
         Location maxLoc = this.location.clone().add(regionSize, regionSize, regionSize);
 
-        Bukkit.getScheduler().runTask(SateEvents.getINSTANCE(), () -> {
-            ProtectedRegion region = GuardManager.createRegion(this.regionId, minLoc, maxLoc);
-            if (flagList != null) flagList.forEach(f -> {
-                String[] split = f.split(" <> ");
-                if (split.length >= 2) region.setFlag(GuardManager.getWGFlag(LFlag.valueOf(split[0])), StateFlag.State.valueOf(split[1]));
-            });
+        ProtectedRegion region = GuardManager.createRegion(this.regionId, minLoc, maxLoc);
+        if (flagList != null) flagList.forEach(f -> {
+            String[] split = f.split(" <> ");
+            if (split.length >= 2) region.setFlag(GuardManager.getWGFlag(LFlag.valueOf(split[0])), StateFlag.State.valueOf(split[1]));
         });
     }
 
@@ -150,6 +148,9 @@ public abstract class SateEvent {
 
     public void removeSchematic() {
         if (this.schem != null) this.schem.undo();
+    }
+
+    public void timerAction(Delay delay) {
     }
 
     @Getter
@@ -170,14 +171,11 @@ public abstract class SateEvent {
                 this.leftSeconds--;
                 if (SateEvent.this.eventBar != null) SateEvent.this.eventBar.update();
 
-                this.timerAction();
+                timerAction(this);
                 Thread.sleep(1000L);
             }
 
             SateEventManager.remove();
-        }
-
-        public void timerAction() {
         }
     }
 

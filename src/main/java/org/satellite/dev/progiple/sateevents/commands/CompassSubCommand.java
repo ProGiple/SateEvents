@@ -8,13 +8,13 @@ import org.bukkit.inventory.meta.CompassMeta;
 import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
-import org.novasparkle.lunaspring.API.commands.processor.ZeroArgCommand;
+import org.novasparkle.lunaspring.API.commands.processor.NoArgCommand;
 import org.satellite.dev.progiple.sateevents.configs.Config;
 import org.satellite.dev.progiple.sateevents.events.SateEvent;
 import org.satellite.dev.progiple.sateevents.events.SateEventManager;
 
 @SubCommand(commandIdentifiers = {"compass"}, appliedCommand = "sateevents")
-@Check(permissions = "@.compass", flags = ZeroArgCommand.AccessFlag.PLAYER_ONLY)
+@Check(permissions = "@.compass", flags = NoArgCommand.AccessFlag.PLAYER_ONLY)
 public class CompassSubCommand implements Invocation {
     @Override
     public void invoke(CommandSender sender, String[] args) {

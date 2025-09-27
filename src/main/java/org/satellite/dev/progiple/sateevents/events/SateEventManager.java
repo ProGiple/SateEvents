@@ -14,8 +14,12 @@ public class SateEventManager {
     @Getter private final Set<EventManager> registeredManagers = new HashSet<>();
     @Getter private SateEvent launchedEvent;
 
+    public EventManager getManager(String pluginId) {
+        return Utils.find(registeredManagers, m -> m.getLunaPlugin().getName().equalsIgnoreCase(pluginId)).orElse(null);
+    }
+
     public EventManager getManager(LunaPlugin lunaPlugin) {
-        return registeredManagers.stream().filter(m -> m.getLunaPlugin().equals(lunaPlugin)).findFirst().orElse(null);
+        return Utils.find(registeredManagers, m -> m.getLunaPlugin().equals(lunaPlugin)).orElse(null);
     }
 
     public boolean run(EventManager eventManager, SateEvent sateEvent) {
