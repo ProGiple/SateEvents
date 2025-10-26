@@ -24,7 +24,7 @@ public class EventBar {
     public EventBar(SateEvent sateEvent, BarColor barColor, BarStyle barStyle, String title) {
         this.title = ColorManager.color(title);
 
-        NamespacedKey key = new NamespacedKey(SateEvents.getINSTANCE(), UUID.randomUUID().toString());
+        NamespacedKey key = new NamespacedKey(SateEvents.getINSTANCE(), "eventbar-" + UUID.randomUUID());
         this.bar = Bukkit.createBossBar(key, this.title, barColor, barStyle);
         this.sateEvent = sateEvent;
 

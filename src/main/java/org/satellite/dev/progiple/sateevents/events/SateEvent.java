@@ -14,6 +14,7 @@ import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LFlag;
 import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
+import org.novasparkle.lunaspring.API.util.utilities.Runnable;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.satellite.dev.progiple.sateevents.SSchem;
@@ -175,7 +176,7 @@ public abstract class SateEvent {
                 Thread.sleep(1000L);
             }
 
-            SateEventManager.remove();
+            Runnable.start(() -> SateEventManager.remove()).runTask(SateEvents.getINSTANCE());
         }
     }
 
