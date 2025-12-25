@@ -45,7 +45,7 @@ public class SateEventManager {
 
     public EventManager getRandom() {
         List<EventManager> eventManagers = new ArrayList<>(registeredManagers);
-        return eventManagers.isEmpty() ? null : eventManagers.get(LunaMath.getRandomInt(0, eventManagers.size()));
+        return LunaMath.getRandom(eventManagers);
     }
 
     public boolean remove() {

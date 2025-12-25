@@ -15,6 +15,10 @@ public abstract class EventManager {
         this.name = ColorManager.color(name);
     }
 
+    public void register() {
+        SateEventManager.getRegisteredManagers().add(this);
+    }
+
     public abstract SateEvent createEvent();
     public abstract void run(SateEvent sateEvent);
     public abstract List<String> getTimes();
