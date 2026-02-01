@@ -167,7 +167,7 @@ public abstract class SateEvent {
         @Override @SneakyThrows @SuppressWarnings("all")
         public void start() {
             while (this.leftSeconds > 0) {
-                if (!this.isActive() || !SateEventManager.getLaunchedEvent().equals(SateEvent.this)) return;
+                if (!this.isActive() || !SateEvent.this.equals(SateEventManager.getLaunchedEvent())) return;
 
                 this.leftSeconds--;
                 if (SateEvent.this.eventBar != null) SateEvent.this.eventBar.update();

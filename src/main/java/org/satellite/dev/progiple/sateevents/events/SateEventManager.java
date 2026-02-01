@@ -35,8 +35,8 @@ public class SateEventManager {
 
     public void forceRun(EventManager eventManager, SateEvent sateEvent) {
         remove();
-        eventManager.run(sateEvent);
         launchedEvent = sateEvent;
+        eventManager.run(sateEvent);
     }
 
     public void forceRun(EventManager eventManager) {
