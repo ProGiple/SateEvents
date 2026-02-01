@@ -4,6 +4,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
@@ -21,6 +22,8 @@ import org.satellite.dev.progiple.sateevents.listeners.OnClickOnBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -148,6 +151,18 @@ public final class SateEvents extends LunaPlugin {
                 for (String id : toRemove) manager.removeRegion(id);
             }
         });
+
+        List<NamespacedKey> keysToRemove = new ArrayList<>();
+        Bukkit.getBossBars().forEachRemaining(b -> {
+            if (b.getKey().getKey().startsWith("eventbar-")) {
+                b.removeAll();
+                keysToRemove.add(b.getKey());
+            }
+        });
+
+        for (var key : keysToRemove) {
+            Bukkit.removeBossBar(key);
+        }
     }
 
     @Override
@@ -158,7 +173,7 @@ public final class SateEvents extends LunaPlugin {
             if (delay != null) delay.cancel();
 
             EventBar eventBar = sateEvent.getEventBar();
-            if (eventBar != null) eventBar.remove();
+            if (eventBar != null) eventBar.delete();
         }
 
         SateEventManager.remove();

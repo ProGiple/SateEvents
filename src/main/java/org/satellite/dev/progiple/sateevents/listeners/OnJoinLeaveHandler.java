@@ -23,7 +23,10 @@ public class OnJoinLeaveHandler implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        Bukkit.getBossBars().forEachRemaining(b -> b.removePlayer(player));
+        Bukkit.getBossBars().forEachRemaining(b -> {
+            if (b.getKey().getKey().startsWith("eventbar-"))
+                b.removePlayer(player);
+        });
 
         SateEvent sateEvent = SateEventManager.getLaunchedEvent();
         if (sateEvent == null) return;
