@@ -19,7 +19,15 @@ public abstract class EventManager {
         SateEventManager.getRegisteredManagers().add(this);
     }
 
+    public void unregister() {
+        SateEventManager.getRegisteredManagers().remove(this);
+    }
+
     public abstract SateEvent createEvent();
-    public abstract void run(SateEvent sateEvent);
+
     public abstract List<String> getTimes();
+
+    public void run(SateEvent sateEvent) {
+        sateEvent.create();
+    }
 }

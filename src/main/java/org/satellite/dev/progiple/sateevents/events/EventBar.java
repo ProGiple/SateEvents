@@ -1,37 +1,44 @@
 package org.satellite.dev.progiple.sateevents.events;
 
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.Player;
-import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.jetbrains.annotations.NotNull;
+import org.novasparkle.lunaspring.API.util.utilities.LunaBossBar;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.LSConfig;
 import org.satellite.dev.progiple.sateevents.SateEvents;
 
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Getter
-public class EventBar {
-    private final KeyedBossBar bar;
+public class EventBar extends LunaBossBar {
     private final SateEvent sateEvent;
-    private final String title;
     public EventBar(SateEvent sateEvent, BarColor barColor, BarStyle barStyle, String title) {
-        this.title = ColorManager.color(title);
-
-        NamespacedKey key = new NamespacedKey(SateEvents.getINSTANCE(), "eventbar-" + UUID.randomUUID());
-        this.bar = Bukkit.createBossBar(key, this.title, barColor, barStyle);
+        super(title, barColor, barStyle, key());
         this.sateEvent = sateEvent;
-
-        this.update();
+        try { this.update(); } catch (Throwable e) { SateEvents.getINSTANCE().warning(e.getLocalizedMessage()); }
     }
 
-    public void update() {
+    public EventBar(@NotNull String title, SateEvent sateEvent) {
+        super(title, key());
+        this.sateEvent = sateEvent;
+        try { this.update(); } catch (Throwable e) { SateEvents.getINSTANCE().warning(e.getLocalizedMessage()); }
+    }
+
+    public EventBar(@NotNull String title, String strBarColor, String strBarStyle, SateEvent sateEvent) {
+        super(title, strBarColor, strBarStyle, key());
+        this.sateEvent = sateEvent;
+        try { this.update(); } catch (Throwable e) { SateEvents.getINSTANCE().warning(e.getLocalizedMessage()); }
+    }
+
+    @Override
+    public LunaBossBar update() {
         Location location = this.sateEvent.getLocation();
         String x = location == null ? "---" : String.valueOf(location.getBlockX());
         String y = location == null ? "---" : String.valueOf(location.getBlockY());
@@ -40,26 +47,32 @@ public class EventBar {
 
         String ruWorldName = LSConfig.getMessage(String.format("worlds.%s", world));
         String time = Utils.Time.timeToString(Utils.Time.parseTime(this.sateEvent.getDelay().getLeftSeconds()));
-        String title = Utils.applyReplacements(this.title,
+        String title = Utils.applyReplacements(this.getDefaultTitle(),
                 "event-%-" + this.sateEvent.getName(),
                 "left-%-" + this.sateEvent.getDelay().getLeftSeconds(),
                 "x-%-" + x, "y-%-" + y, "z-%-" + z, "world-%-" + world,
                 "ls-world-%-" + ruWorldName,
                 "time-%-" + time);
 
-        Player player = this.bar.getPlayers().isEmpty() ? null : this.bar.getPlayers().get(0);
-        this.bar.setTitle(player == null ? title : Utils.setPlaceholders(player, title));
+        Player player = this.getPlayers().isEmpty() ? null : this.getPlayers().get(0);
+        this.updateTitle(player == null ? title : Utils.setPlaceholders(player, title));
 
         SateEvent.Delay delay = this.sateEvent.getDelay();
-        this.bar.setProgress((double) delay.getLeftSeconds() / delay.getMax());
+        this.setProgress((float) delay.getLeftSeconds() / delay.getMax());
+
+        return this;
     }
 
-    public void addPlayer(Player player, Function<Player, Boolean> function) {
-        if (function == null || function.apply(player)) this.bar.addPlayer(player);
-    }
-
+    @Deprecated
     public void remove() {
-        this.bar.removeAll();
-        Bukkit.removeBossBar(this.bar.getKey());
+        this.delete();
+    }
+
+    public void addPlayer(Player player, Predicate<Player> predicate) {
+        if (predicate == null || predicate.test(player)) this.addPlayer(player);
+    }
+
+    public static NamespacedKey key() {
+        return new NamespacedKey(SateEvents.getINSTANCE(), "eventbar-" + UUID.randomUUID());
     }
 }

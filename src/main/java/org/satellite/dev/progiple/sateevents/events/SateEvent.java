@@ -2,20 +2,18 @@ package org.satellite.dev.progiple.sateevents.events;
 
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LFlag;
-import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
-import org.novasparkle.lunaspring.API.util.utilities.Runnable;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
+import org.novasparkle.lunaspring.API.util.utilities.tasks.LunaTask;
+import org.novasparkle.lunaspring.API.util.utilities.tasks.Runnable;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.satellite.dev.progiple.sateevents.SSchem;
 import org.satellite.dev.progiple.sateevents.SateEvents;
@@ -24,26 +22,31 @@ import org.satellite.dev.progiple.sateevents.configs.Config;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
-@Getter
+@Getter @Setter
 public abstract class SateEvent {
-    @Setter private EventBar eventBar;
-    @Setter private Location location;
+    protected EventBar eventBar;
+    protected Location location;
+    protected SSchem schem;
+    protected int regionSize;
+    protected String regionId;
+    protected String name;
 
-    private final SSchem schem;
-    private final Set<EventBlock> eventBlocks = new HashSet<>();
-    private final LunaPlugin lunaPlugin;
-    private final int regionSize;
-    private final String regionId;
-    private final Delay delay;
-    private final String name;
-    public SateEvent(LunaPlugin lunaPlugin, int lifeTime, String name, int regionSize) {
+    protected final Set<EventBlock> eventBlocks = new HashSet<>();
+    protected final LunaPlugin lunaPlugin;
+    protected final Delay delay;
+    public SateEvent(LunaPlugin lunaPlugin, int lifeTime, String name, int regionSize, Supplier<SSchem> sSchemSupplier) {
         this.lunaPlugin = lunaPlugin;
         this.delay = new Delay(lifeTime);
         this.name = ColorManager.color(name);
         this.regionId = "sateevent-" + Utils.getRKey((byte) 12);
         this.regionSize = regionSize;
-        this.schem = Utils.isPluginEnabled("SateSchematics") ? new SSchem() : null;
+        this.schem = Utils.isPluginEnabled("SateSchematics") ? sSchemSupplier.get() : null;
+    }
+
+    public SateEvent(LunaPlugin lunaPlugin, int lifeTime, String name, int regionSize) {
+        this(lunaPlugin, lifeTime, name, regionSize, SSchem::new);
     }
 
     public abstract void create();
@@ -57,19 +60,13 @@ public abstract class SateEvent {
                                  List<String> materials,
                                  List<String> blacklistBiomes,
                                  BlockFilter filter) {
-        for (int i = 0; i < Math.max(Config.getFindLocAtt(), 15); i++) {
-            Location location = Utils.findRandomLocation(world, maxX, maxZ);
-            if (location == null) continue;
-
-            Location upper = location.clone().add(0, 1, 0);
-            if (upper.getY() < minY || upper.getY() > maxY || !upper.getBlock().getType().isAir()
-                    || this.checkMaterial(location, materials, filter)
-                    || this.checkRegion(upper, this.regionSize)
-                    || this.checkBiome(upper, blacklistBiomes)) continue;
-
-            return upper;
-        }
-        return null;
+        return Utils.findRandomLocations(world, maxX, maxZ, Math.max(Config.getFindLocAtt(), 15), location -> {
+            Location upper = location.add(0, 1, 0);
+            return !(upper.getY() < minY) && !(upper.getY() > maxY) && upper.getBlock().getType().isAir()
+                    && !this.checkMaterial(location, materials, filter)
+                    && !this.checkRegion(upper, this.regionSize)
+                    && !this.checkBiome(upper, blacklistBiomes);
+        });
     }
 
     public Location initLocation(World world,
