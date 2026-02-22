@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.util.utilities.LunaBossBar;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 import org.satellite.dev.progiple.sateevents.SateEvents;
 
 import java.util.UUID;
