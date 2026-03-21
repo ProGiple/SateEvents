@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
-import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
@@ -28,17 +27,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class SateEvents extends LunaPlugin {
-    @Getter private static SateEvents INSTANCE;
+    @Getter private static SateEvents instance;
+    @Getter private static boolean sateSchematicsEnabled = false;
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
+        instance = this;
         super.onEnable();
 
         saveDefaultConfig();
 
         CommandInitializer.initialize(this, "#.commands");
         this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler(), new OnJoinLeaveHandler());
+
+        Bukkit.getScheduler().runTaskAsynchronously(this, () ->
+                sateSchematicsEnabled = Utils.isPluginEnabled("SateSchematics"));
+
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.contains("[tr]")) {
                 String value = Utils.setNakedPlaceholders(offlinePlayer, "event_" + params.replace("[tr]", ""));

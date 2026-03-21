@@ -10,11 +10,11 @@ import org.satellite.dev.progiple.sateevents.SateEvents;
 public class Config {
     private final IConfig config;
     static {
-        config = new IConfig(SateEvents.getINSTANCE());
+        config = new IConfig(SateEvents.getInstance());
     }
 
     public void reload() {
-        config.reload(SateEvents.getINSTANCE());
+        config.reload(SateEvents.getInstance());
     }
 
     public void sendMessage(CommandSender sender, String id, String... rpl) {

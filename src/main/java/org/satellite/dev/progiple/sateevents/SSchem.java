@@ -9,17 +9,17 @@ import org.satellite.dev.progiple.sateschematics.schems.pasted.PastedSchematic;
 import org.satellite.dev.progiple.sateschematics.schems.states.SchematicManager;
 
 public class SSchem {
-    private final Configuration config = new Configuration(SateEvents.getINSTANCE().getDataFolder(), "sync");
+    private final Configuration config = new Configuration(SateEvents.getInstance().getDataFolder(), "sync");
     private PastedSchematic schematic;
 
     public void place(String id, Location location) {
         YAMLSchematic yamlSchematic = SchematicManager.getSchem(id);
         if (yamlSchematic == null || this.schematic != null) return;
 
-        Bukkit.getScheduler().runTask(SateEvents.getINSTANCE(), () -> {
+        Bukkit.getScheduler().runTask(SateEvents.getInstance(), () -> {
             this.schematic = yamlSchematic.paste(location, null);
 
-            Bukkit.getScheduler().runTaskLaterAsynchronously(SateEvents.getINSTANCE(), () -> {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(SateEvents.getInstance(), () -> {
                 ConfigurationSection section = config.createSection((String) null, "schem");
                 this.schematic.save(section);
                 this.config.save();

@@ -21,19 +21,19 @@ public class EventBar extends LunaBossBar {
     public EventBar(SateEvent sateEvent, BarColor barColor, BarStyle barStyle, String title) {
         super(title, barColor, barStyle, key());
         this.sateEvent = sateEvent;
-        try { this.update(); } catch (Throwable e) { SateEvents.getINSTANCE().warning(e.getLocalizedMessage()); }
+        try { this.update(); } catch (Throwable e) { SateEvents.getInstance().warning(e.getLocalizedMessage()); }
     }
 
     public EventBar(@NotNull String title, SateEvent sateEvent) {
         super(title, key());
         this.sateEvent = sateEvent;
-        try { this.update(); } catch (Throwable e) { SateEvents.getINSTANCE().warning(e.getLocalizedMessage()); }
+        try { this.update(); } catch (Throwable e) { SateEvents.getInstance().warning(e.getLocalizedMessage()); }
     }
 
     public EventBar(@NotNull String title, String strBarColor, String strBarStyle, SateEvent sateEvent) {
         super(title, strBarColor, strBarStyle, key());
         this.sateEvent = sateEvent;
-        try { this.update(); } catch (Throwable e) { SateEvents.getINSTANCE().warning(e.getLocalizedMessage()); }
+        try { this.update(); } catch (Throwable e) { SateEvents.getInstance().warning(e.getLocalizedMessage()); }
     }
 
     @Override
@@ -72,6 +72,6 @@ public class EventBar extends LunaBossBar {
     }
 
     public static NamespacedKey key() {
-        return new NamespacedKey(SateEvents.getINSTANCE(), "eventbar-" + UUID.randomUUID());
+        return new NamespacedKey(SateEvents.getInstance(), "eventbar-" + UUID.randomUUID());
     }
 }

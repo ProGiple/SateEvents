@@ -35,14 +35,14 @@ public abstract class SateEvent {
 
     protected final Set<EventBlock> eventBlocks = new HashSet<>();
     protected final LunaPlugin lunaPlugin;
-    protected final Delay delay;
+    protected Delay delay;
     public SateEvent(LunaPlugin lunaPlugin, int lifeTime, String name, int regionSize, Supplier<SSchem> sSchemSupplier) {
         this.lunaPlugin = lunaPlugin;
         this.delay = new Delay(lifeTime);
         this.name = ColorManager.color(name);
         this.regionId = "sateevent-" + Utils.getRKey((byte) 12);
         this.regionSize = regionSize;
-        this.schem = Utils.isPluginEnabled("SateSchematics") ? sSchemSupplier.get() : null;
+        this.schem = SateEvents.isSateSchematicsEnabled() ? sSchemSupplier.get() : null;
     }
 
     public SateEvent(LunaPlugin lunaPlugin, int lifeTime, String name, int regionSize) {
@@ -153,11 +153,10 @@ public abstract class SateEvent {
 
     @Getter
     public class Delay extends LunaTask {
-        private final int max;
-        private int leftSeconds;
+        protected int leftSeconds;
+        protected long sleepDelay = 1000L;
         public Delay(int seconds) {
-            super(0);
-            this.max = seconds;
+            super(seconds);
             this.leftSeconds = seconds;
         }
 
@@ -170,10 +169,14 @@ public abstract class SateEvent {
                 if (SateEvent.this.eventBar != null) SateEvent.this.eventBar.update();
 
                 timerAction(this);
-                Thread.sleep(1000L);
+                Thread.sleep(sleepDelay);
             }
 
-            Runnable.start(() -> SateEventManager.remove()).runTask(SateEvents.getINSTANCE());
+            Runnable.start(() -> SateEventManager.remove()).runTask(SateEvents.getInstance());
+        }
+
+        public int getMax() {
+            return (int) this.getTicks();
         }
     }
 
