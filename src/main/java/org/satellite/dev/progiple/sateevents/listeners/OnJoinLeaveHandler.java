@@ -6,18 +6,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.satellite.dev.progiple.sateevents.events.EventBar;
-import org.satellite.dev.progiple.sateevents.events.SateEvent;
-import org.satellite.dev.progiple.sateevents.events.SateEventManager;
+import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
 
 public class OnJoinLeaveHandler implements Listener {
     @EventHandler
-    public void onLeave(PlayerQuitEvent e) {
-        SateEvent sateEvent = SateEventManager.getLaunchedEvent();
-        if (sateEvent == null) return;
-
-        EventBar bar = sateEvent.getEventBar();
-        if (bar != null) bar.getBar().removePlayer(e.getPlayer());
+    public void onQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+        SateEventsManager.getLaunchedEvents().forEach(event -> {
+            if (event.getStage() != null)
+                if (event.getStage().getBossBar() != null)
+                    event.getStage().getBossBar().removePlayer(player);
+        });
     }
 
     @EventHandler
@@ -28,10 +27,10 @@ public class OnJoinLeaveHandler implements Listener {
                 b.removePlayer(player);
         });
 
-        SateEvent sateEvent = SateEventManager.getLaunchedEvent();
-        if (sateEvent == null) return;
-
-        EventBar bar = sateEvent.getEventBar();
-        if (bar != null) bar.addPlayer(player, null);
+        SateEventsManager.getLaunchedEvents().forEach(event -> {
+            if (event.getStage() != null)
+                if (event.getStage().getBossBar() != null)
+                    event.getStage().getBossBar().addPlayerWithConditions(player);
+        });
     }
 }

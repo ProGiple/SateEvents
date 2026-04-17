@@ -1,27 +1,37 @@
-findLocationAttempts: 20
-messages:
+findLocationAttempts: 50
+enableEventScheduler: true
+placeholders:
   dropNotActive: "Не активен!"
   dropIsActive: "Активен!"
+  eventPoolIsEmpty: "Пусто!"
+  isNext: "Следующий"
+  isNotNext: "Не следующий"
+  locationIsNull: "---"
+messages:
+  eventPoolIsEmpty: "{SP} Доступных ивентов не было найдено!"
   reload: '{SP} Вы успешно перезагрузили плагин!'
-  inactive: '{SP} Ивент еще не активен!'
-  isActive: '{SP} Ивент уже активен!'
-  notExists: '{E}{SPR} Ивента {E}[event_name] &fне существует!'
+  eventIsInactive: '{SP} Ивент [id] еще не активен!'
+  eventsAreInactive: "{SP} Сейчас не запущено ни одного ивента!"
+  eventIsActive: '{SP} Ивент [name] уже активен!'
+  eventNotExists: '{E}{SPR} Ивента {E}[id] &fне существует!'
   delayNext:
-    - ' '
-    - '{SP} Следующий ивент будет в {S}%event_next_time[a]%'
-    - ' '
-  delay:
-    - ' '
-    - '{SP} Ивент [event_name] &fбудет в {S}[event_time_left]'
-    - ' '
+    global:
+      - ' '
+      - '{SP} Следующий ивент: [name]'
+      - '{SP} Время призыва: [next_time]'
+      - ' '
+    taped:
+      - ' '
+      - '{SP} Ивент [name] &fбудет в {S}[next_time]'
+      - ' '
   teleport: '{SP} Вы телепортировались к ивенту {S}%event_now_name%'
   locate:
     - ' '
-    - '[RUNCOMMAND] {SP} Координаты ивента: *%*{S}[ %event_x%; %event_y%; %event_z% ]*%*/event tp*%*'
-    - '{SP} Мир локации ивента: {S}%lunaspring_localize-worlds.{event_world}%'
+    - '[RUNCOMMAND] {SP} Координаты ивента [name]: *%*{S}[ [x]; [y]; [z] ]*%*/event tp [id]*%*'
+    - '{SP} Мир локации ивента: {S}[world]'
     - ' '
   compass: '{L}{SPR} Вы успешно установили стрелку компаса на {L}ивент!'
   noCompass: '{E}{SPR} Возьмите для начала в руку компас!'
-  startRandom: '{E}{SPR} Вы успешно запустили рандомный ивент!'
-  start: '{SP} Вы успешно запустили ивент {S}[event_name]'
-  stop: '{SP} Вы успешно остановили ивент!'
+  start: '{SP} Вы успешно запустили ивент {S}[name]'
+  stop: '{SP} Вы успешно остановили ивент [name]!'
+  stopAll: '{SP} Вы успешно остановили все ивенты!'

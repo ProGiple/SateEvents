@@ -5,9 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.novasparkle.lunaspring.API.events.CooldownPrevent;
-import org.satellite.dev.progiple.sateevents.events.EventBlock;
-import org.satellite.dev.progiple.sateevents.events.SateEvent;
-import org.satellite.dev.progiple.sateevents.events.SateEventManager;
+import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
 
 import java.util.UUID;
 
@@ -19,14 +17,7 @@ public class OnClickOnBlockHandler implements Listener {
         Block block = e.getClickedBlock();
         if (block == null || block.getType().isAir()) return;
 
-        SateEvent sateEvent = SateEventManager.getLaunchedEvent();
-        if (sateEvent == null) return;
-
-        EventBlock eventBlock = sateEvent.getEventBlocks()
-                .stream()
-                .filter(b -> b.getBlock().equals(block))
-                .findFirst()
-                .orElse(null);
+        var eventBlock = SateEventsManager.getEventBlock(block);
         if (eventBlock != null) {
             if (uuidCooldownPrevent.isCancelled(e, e.getPlayer().getUniqueId())) e.setCancelled(true);
             else eventBlock.onInteract(e);

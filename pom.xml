@@ -6,7 +6,7 @@
 
   <groupId>org.satellite.dev.progiple</groupId>
   <artifactId>SateEvents</artifactId>
-  <version>1.1.1</version>
+  <version>2.0</version>
   <packaging>jar</packaging>
 
   <name>SateEvents</name>
@@ -84,7 +84,7 @@
       <dependency>
           <groupId>com.github.NovaSparkle</groupId>
           <artifactId>LunaSpring</artifactId>
-          <version>3.14</version>
+          <version>3.15</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
@@ -98,6 +98,11 @@
           <artifactId>SateSchematics</artifactId>
           <version>1.0.8</version>
           <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>it.unimi.dsi</groupId>
+          <artifactId>dsiutils</artifactId>
+          <version>2.6.0</version>
       </dependency>
   </dependencies>
 </project>

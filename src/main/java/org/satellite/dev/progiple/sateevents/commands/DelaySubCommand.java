@@ -1,20 +1,16 @@
 package org.satellite.dev.progiple.sateevents.commands;
 
 import org.bukkit.command.CommandSender;
-import org.novasparkle.lunaspring.API.commands.LunaCompleter;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.commands.annotations.Permissions;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
-import org.novasparkle.lunaspring.LunaPlugin;
-import org.novasparkle.lunaspring.LunaSpring;
 import org.satellite.dev.progiple.sateevents.configs.Config;
-import org.satellite.dev.progiple.sateevents.events.EventManager;
-import org.satellite.dev.progiple.sateevents.events.SateEventManager;
+import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
+import org.satellite.dev.progiple.sateevents.event.realization.IEventManager;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SubCommand(commandIdentifiers = {"delay"}, appliedCommand = "sateevents")
 @Permissions("@.delay")
@@ -22,41 +18,39 @@ public class DelaySubCommand implements LunaExecutor {
     @Override
     public void invoke(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            Config.sendMessage(sender, "delayNext");
+            IEventManager manager = SateEventsManager.getNextManager();
+            if (manager == null) {
+                Config.sendMessage(sender, "eventPoolIsEmpty");
+                return;
+            }
+
+            Config.sendMessage(sender, "delayNext.global", manager.getReplacementInformation(0));
             return;
         }
 
         if (args.length >= 2) {
-            LunaPlugin lunaPlugin = LunaSpring.getInstance().getLunaPlugin(args[1]);
-            if (lunaPlugin == null) {
-                Config.sendMessage(sender, "notExists", "event_name-%-" + args[1]);
-                return;
-            }
+            String id = args[1];
 
-            EventManager eventManager = SateEventManager.getManager(lunaPlugin);
+            IEventManager eventManager = SateEventsManager.getManager(id);
             if (eventManager == null) {
-                Config.sendMessage(sender, "notExists", "event_name-%-" + args[1]);
+                Config.sendMessage(sender, "eventNotExists", "id-%-" + args[1]);
                 return;
             }
 
-            if (SateEventManager.getLaunchedEvent() != null) {
-                Config.sendMessage(sender, "isActive", "event_name-%-" + eventManager.getName());
+            if (SateEventsManager.isActive()) {
+                Config.sendMessage(sender, "eventIsActive", eventManager.getReplacementInformation(0));
                 return;
             }
 
-            LocalTime next = Utils.Time.getNextTime(eventManager.getTimes());
-            Config.sendMessage(sender, "delay", "event_name-%-" + eventManager.getName(),
-                    "event_time-%-" + next.toString(),
-                    "event_time_left-%-" + Utils.Time.getTimeBetween(next));
+            Config.sendMessage(sender, "delayNext.taped", eventManager.getReplacementInformation(0));
         }
     }
 
     @Override
     public List<String> tabComplete(CommandSender commandSender, List<String> list) {
-        return list.size() == 1 ? Utils.tabCompleterFiltering(SateEventManager.getRegisteredManagers()
+        return list.size() == 1 ? Utils.tabCompleterFiltering(SateEventsManager.getManagers()
                 .stream()
-                .map(m -> m.getLunaPlugin().getName())
-                .collect(Collectors.toSet()), list.get(0)) : List.of();
+                .map(IEventManager::getId), list.get(0)) : List.of();
     }
 }
 

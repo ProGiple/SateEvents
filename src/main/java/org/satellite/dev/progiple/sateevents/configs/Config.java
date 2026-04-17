@@ -21,11 +21,15 @@ public class Config {
         config.sendMessage(sender, id, rpl);
     }
 
-    public String getMessage(String id) {
-        return ColorManager.color(config.getString("messages." + id));
+    public String getString(String id) {
+        return config.getString(id);
     }
 
     public int getFindLocAtt() {
         return config.getInt("findLocationAttempts");
+    }
+
+    public boolean getBoolean(String path) {
+        return config.getBoolean(path);
     }
 }

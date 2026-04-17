@@ -10,8 +10,9 @@ import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.commands.processor.NoArgCommand;
 import org.satellite.dev.progiple.sateevents.configs.Config;
-import org.satellite.dev.progiple.sateevents.events.SateEvent;
-import org.satellite.dev.progiple.sateevents.events.SateEventManager;
+import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
+import org.satellite.dev.progiple.sateevents.event.realization.ILocationStage;
+import org.satellite.dev.progiple.sateevents.event.realization.SateEvent;
 
 @SubCommand(commandIdentifiers = {"compass"}, appliedCommand = "sateevents")
 @Check(permissions = "@.compass", flags = NoArgCommand.AccessFlag.PLAYER_ONLY)
@@ -25,17 +26,17 @@ public class CompassSubCommand implements Invocation {
             return;
         }
 
-        SateEvent sateEvent = SateEventManager.getLaunchedEvent();
+        SateEvent sateEvent = SateEventsManager.getNearestEvent(player.getLocation());
         if (sateEvent == null) {
-            Config.sendMessage(sender, "inactive");
+            Config.sendMessage(sender, "eventsAreInactive");
             return;
         }
 
         CompassMeta compassMeta = (CompassMeta) itemStack.getItemMeta();
-        compassMeta.setLodestone(sateEvent.getLocation());
+        compassMeta.setLodestone(((ILocationStage) sateEvent.getStage()).getLocation());
         compassMeta.setLodestoneTracked(false);
         itemStack.setItemMeta(compassMeta);
 
-        Config.sendMessage(player, "compass");
+        Config.sendMessage(player, "compass", sateEvent.getManager().getReplacementInformation(0));
     }
 }
