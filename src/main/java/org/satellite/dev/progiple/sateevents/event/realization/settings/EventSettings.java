@@ -3,6 +3,7 @@ package org.satellite.dev.progiple.sateevents.event.realization.settings;
 import com.sk89q.worldguard.protection.flags.Flag;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
@@ -11,20 +12,19 @@ import org.satellite.dev.progiple.sateevents.factories.SpawnSettingsFactory;
 import org.satellite.dev.progiple.sateevents.factories.storage.Factories;
 import org.satellite.dev.progiple.sateevents.event.realization.searcher.gens.LocationGen1;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.spawn.RandomSpawnSettings;
-import org.satellite.dev.progiple.sateschematics.schems.pasted.PastedSchematic;
 
 import java.util.*;
 
-@Getter
+@Getter @Setter
 public class EventSettings implements Settings {
-    private final String id;
-    private final String name;
-    private final RegionSettings regionSettings;
-    private final ISpawnSettings spawnSettings;
-    private final ISchematicSettings<?, ?> schematicSettings;
+    private String id;
+    private String name;
+    private RegionSettings regionSettings;
+    private ISpawnSettings spawnSettings;
+    private ISchematicSettings<?, ?> schematicSettings;
     public EventSettings(ConfigurationSection section) {
         this.name = section.getString("name");
-        this.id = section.getName();
+        this.id = section.getString("id");
 
         ConfigurationSection region = section.getConfigurationSection("region");
         if (region == null) {

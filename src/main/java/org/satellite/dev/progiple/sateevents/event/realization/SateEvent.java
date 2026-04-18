@@ -3,6 +3,7 @@ package org.satellite.dev.progiple.sateevents.event.realization;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ import org.satellite.dev.progiple.sateevents.listeners.events.impl.SateEventStop
 
 import java.util.function.Consumer;
 
-@Getter
+@Getter @Setter
 public abstract class SateEvent {
     private final IEventManager manager;
     private EventSettings settings;
