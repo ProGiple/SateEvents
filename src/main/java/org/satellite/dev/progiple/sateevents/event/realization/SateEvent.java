@@ -39,9 +39,14 @@ public abstract class SateEvent {
         return manager.getTimeParser();
     }
 
+    public int getLifeTime() {
+        if (stage == null || stage.getTimer() == null) return 0;
+        return stage.getLifeTime();
+    }
+
     public int getRemainsSeconds() {
-        if (stage == null || stage.getTimer() == null) return settings.getLifeSeconds();
-        return settings.getLifeSeconds() - stage.getTimer().getTickTimes();
+        if (stage == null || stage.getTimer() == null) return this.getLifeTime();
+        return this.getLifeTime() - stage.getTimer().getTickTimes();
     }
 
     public EventRequest stop(EventStopReason reason) {

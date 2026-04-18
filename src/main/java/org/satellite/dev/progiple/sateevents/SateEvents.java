@@ -2,6 +2,7 @@ package org.satellite.dev.progiple.sateevents;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
@@ -20,6 +21,7 @@ import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public final class SateEvents extends LunaPlugin {
@@ -100,5 +102,13 @@ public final class SateEvents extends LunaPlugin {
 
             return null;
         }));
+    }
+
+    public static void executeThrowable(CommandSender sender, Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable throwable) {
+            Config.sendMessage(sender, "actionThrows", "exception-%-" + throwable.getLocalizedMessage());
+        }
     }
 }

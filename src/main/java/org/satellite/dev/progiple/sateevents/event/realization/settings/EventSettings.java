@@ -11,6 +11,7 @@ import org.satellite.dev.progiple.sateevents.factories.SpawnSettingsFactory;
 import org.satellite.dev.progiple.sateevents.factories.storage.Factories;
 import org.satellite.dev.progiple.sateevents.event.realization.searcher.gens.LocationGen1;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.spawn.RandomSpawnSettings;
+import org.satellite.dev.progiple.sateschematics.schems.pasted.PastedSchematic;
 
 import java.util.*;
 
@@ -18,14 +19,12 @@ import java.util.*;
 public class EventSettings implements Settings {
     private final String id;
     private final String name;
-    private final int lifeSeconds;
     private final RegionSettings regionSettings;
     private final ISpawnSettings spawnSettings;
     private final ISchematicSettings<?, ?> schematicSettings;
     public EventSettings(ConfigurationSection section) {
         this.name = section.getString("name");
         this.id = section.getName();
-        this.lifeSeconds = section.getInt("lifeSeconds");
 
         ConfigurationSection region = section.getConfigurationSection("region");
         if (region == null) {
@@ -68,13 +67,11 @@ public class EventSettings implements Settings {
     @Builder
     public EventSettings(String id,
                          String name,
-                         int lifeSeconds,
                          RegionSettings regionSettings,
                          ISpawnSettings spawnSettings,
                          ISchematicSettings<?, ?> schematicSettings) {
         this.id = id;
         this.name = name;
-        this.lifeSeconds = lifeSeconds;
         this.regionSettings = regionSettings;
         this.spawnSettings = spawnSettings;
         this.schematicSettings = schematicSettings;

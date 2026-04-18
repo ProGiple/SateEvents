@@ -125,10 +125,10 @@ public interface IEventManager extends LunaCompleter, EventPlaceholderRequest {
                 "name-%-" + this.getDisplayName(),
                 "plugin-%-" + this.getPlugin().getName(),
                 "nextTime-%-" + getTimeParser().parseTime(secondsToNext(LocalDateTime.now())),
+                "lifeTime-%-" + nullableString(event, SateEvent::getLifeTime),
                 "active-%-" + (this.isActive() ? "yes" : "no"),
                 "activeId-%-" + nullableString(settings, EventSettings::getId),
                 "activeName-%-" + nullableString(settings, EventSettings::getName),
-                "lifeTime-%-" + nullableString(settings, EventSettings::getLifeSeconds),
                 "regionSize-%-" + nullableString(settings, s -> s.getRegionSettings().size()),
                 "remainTime-%-" + nullableString(event, SateEvent::getRemainsSeconds),
                 "regionId-%-" + nullableString(event, SateEvent::getRegionId),
@@ -215,7 +215,7 @@ public interface IEventManager extends LunaCompleter, EventPlaceholderRequest {
                     return event.getSettings().getName();
                 }
                 case "lifeTime" -> {
-                    return String.valueOf(event.getSettings().getLifeSeconds());
+                    return String.valueOf(event.getLifeTime());
                 }
                 case "regionSize" -> {
                     return String.valueOf(event.getSettings().getRegionSettings().size());

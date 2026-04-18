@@ -19,6 +19,7 @@ public class Factories {
 
     private void load() {
         register(new LocationGen1Factory());
+        register(new LocationGen2Factory());
         register(new WorldEditSchematicFactory());
         register(new RandomSpawnSettingsFactory());
         register(new StaticSpawnSettingsFactory());

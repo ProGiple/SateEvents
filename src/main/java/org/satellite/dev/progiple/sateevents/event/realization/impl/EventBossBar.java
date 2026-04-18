@@ -51,7 +51,7 @@ public class EventBossBar extends LunaBossBar {
         replacer[length + 1] = "stage-%-" + event.getStage().getName();
         replacer[length + 2] = "leftSeconds-%-" + event.getRemainsSeconds();
         replacer[length + 3] = "leftTime-%-" + event.getTimeParser().parseTime(event.getRemainsSeconds());
-        replacer[length + 4] = "lifeSeconds-%-" + event.getSettings().getLifeSeconds();
+        replacer[length + 4] = "lifeSeconds-%-" + event.getLifeTime();
 
         String line = Utils.applyReplacements(title, replacer);
 
@@ -79,7 +79,7 @@ public class EventBossBar extends LunaBossBar {
 
     @Override
     public EventBossBar setProgress(float value) {
-        value = Math.min(0, Math.max(1.0f, (float) event.getRemainsSeconds() / event.getSettings().getLifeSeconds()));
+        value = Math.min(0, Math.max(1.0f, (float) event.getRemainsSeconds() / event.getLifeTime()));
         super.setProgress(value);
         return this;
     }

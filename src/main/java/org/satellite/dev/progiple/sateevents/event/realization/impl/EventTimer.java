@@ -11,15 +11,23 @@ import org.satellite.dev.progiple.sateevents.listeners.events.impl.AsyncSateEven
 @Getter @Setter
 public class EventTimer extends LunaTask implements SateEventTimer {
     private final SateEvent event;
+    private int lifeTime;
     private int tickTimes = 0;
+    public EventTimer(SateEvent event, int lifeTime) {
+        this.event = event;
+        this.lifeTime = lifeTime;
+    }
+
     public EventTimer(SateEvent event) {
         this.event = event;
+        this.lifeTime = 0;
     }
 
     @Override @SneakyThrows
     @SuppressWarnings("all")
     public void start() {
-        while (tickTimes < event.getSettings().getLifeSeconds()) {
+        while (tickTimes < lifeTime) {
+            if (!this.isActive()) return;
             tickEvent(false);
             if (event.getStage().getBossBar() != null) event.getStage().getBossBar().update();
             event.timerTick(false, this);
@@ -38,7 +46,7 @@ public class EventTimer extends LunaTask implements SateEventTimer {
                 this.event,
                 this.event.getStage(),
                 tickTimes,
-                this.event.getSettings().getLifeSeconds(),
+                lifeTime,
                 f);
         event.call();
     }

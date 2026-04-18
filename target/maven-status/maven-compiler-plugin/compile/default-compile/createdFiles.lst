@@ -47,7 +47,9 @@ org\satellite\dev\progiple\sateevents\event\realization\impl\EventRequest.class
 org\satellite\dev\progiple\sateevents\factories\SchematicSettingsFactory.class
 org\satellite\dev\progiple\sateevents\event\realization\impl\EventBossBar.class
 org\satellite\dev\progiple\sateevents\factories\storage\FactoryId.class
+org\satellite\dev\progiple\sateevents\commands\templates\EventStartSubCommand.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\ISchematicSettings.class
+org\satellite\dev\progiple\sateevents\commands\templates\AbstractTemplateSubCommand.class
 org\satellite\dev\progiple\sateevents\commands\ReloadSubCommand.class
 org\satellite\dev\progiple\sateevents\event\realization\impl\EventStopReason.class
 org\satellite\dev\progiple\sateevents\event\realization\IEventBlock.class
@@ -56,6 +58,7 @@ org\satellite\dev\progiple\sateevents\commands\CompassSubCommand.class
 org\satellite\dev\progiple\sateevents\event\realization\impl\EventStage.class
 org\satellite\dev\progiple\sateevents\factories\impl\WorldEditSchematicFactory.class
 org\satellite\dev\progiple\sateevents\commands\StopSubCommand.class
+org\satellite\dev\progiple\sateevents\commands\templates\EventStopSubCommand.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\RegionSettings.class
 org\satellite\dev\progiple\sateevents\listeners\events\impl\SateEventStopEvent.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\spawn\StaticSpawnSettings.class

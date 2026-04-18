@@ -5,6 +5,7 @@ import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.commands.annotations.Args;
 import org.novasparkle.lunaspring.API.commands.annotations.Permissions;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
+import org.satellite.dev.progiple.sateevents.SateEvents;
 import org.satellite.dev.progiple.sateevents.configs.Config;
 import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
 import org.satellite.dev.progiple.sateevents.event.realization.IEventManager;
@@ -36,8 +37,10 @@ public class StopSubCommand implements LunaExecutor {
             return;
         }
 
-        manager.stop(EventStopReason.FORCE);
-        Config.sendMessage(sender, "stop", manager.getReplacementInformation(0));
+        SateEvents.executeThrowable(sender, () -> {
+            manager.stop(EventStopReason.FORCE);
+            Config.sendMessage(sender, "stop", manager.getReplacementInformation(0));
+        });
     }
 
     @Override

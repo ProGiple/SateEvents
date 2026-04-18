@@ -20,18 +20,25 @@ public abstract class EventStage implements IEventStage {
     private final short index;
     private EventBossBar bossBar;
 
-    public EventStage(short index, String id, String name, SateEvent event) {
+    public EventStage(short index, String id, String name, SateEvent event, int lifeTime) {
         this.index = index;
         this.id = id;
         this.name = name;
-        this.timer = new EventTimer(event);
+        this.timer = new EventTimer(event, lifeTime);
     }
 
-    public EventStage(short index, ConfigurationSection section, SateEvent event) {
+    public EventStage(short index, ConfigurationSection section, SateEvent event, int lifeTime) {
         this.index = index;
         this.id = section.getName();
         this.name = section.getString("name");
-        this.timer = new EventTimer(event);
+        this.timer = new EventTimer(event, lifeTime);
+    }
+
+    public EventStage(short index, String id, String name, EventTimer timer) {
+        this.index = index;
+        this.id = id;
+        this.name = name;
+        this.timer = timer;
     }
 
     public EventBossBar createBossBar(ConfigurationSection section) {

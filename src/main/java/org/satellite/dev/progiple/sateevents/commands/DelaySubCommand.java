@@ -9,7 +9,6 @@ import org.satellite.dev.progiple.sateevents.configs.Config;
 import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
 import org.satellite.dev.progiple.sateevents.event.realization.IEventManager;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SubCommand(commandIdentifiers = {"delay"}, appliedCommand = "sateevents")

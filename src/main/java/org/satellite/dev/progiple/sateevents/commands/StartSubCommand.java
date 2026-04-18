@@ -6,6 +6,7 @@ import org.novasparkle.lunaspring.API.commands.annotations.Permissions;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.lists.LunaList;
+import org.satellite.dev.progiple.sateevents.SateEvents;
 import org.satellite.dev.progiple.sateevents.configs.Config;
 import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
 import org.satellite.dev.progiple.sateevents.event.realization.IEventManager;
@@ -50,8 +51,10 @@ public class StartSubCommand implements LunaExecutor {
             System.arraycopy(args, 2, summonArgs, 0, args.length - 2);
         }
 
-        if (manager.startEvent(sender, summonArgs) != null)
-            Config.sendMessage(sender, "start", manager.getReplacementInformation(0));
+        SateEvents.executeThrowable(sender, () -> {
+            if (manager.startEvent(sender, summonArgs) != null)
+                Config.sendMessage(sender, "start", manager.getReplacementInformation(0));
+        });
     }
 
     @Override
@@ -62,10 +65,10 @@ public class StartSubCommand implements LunaExecutor {
                     .filter(m -> !m.isActive())
                     .map(IEventManager::getId), args.get(0));
         }
-        else if (args.size() == 2) {
+        else if (args.size() >= 2) {
             IEventManager manager = SateEventsManager.getManager(args.get(0));
             if (manager != null && !manager.isActive())
-                return manager.tabComplete(commandSender, args);
+                return manager.tabComplete(commandSender, args.subList(1, args.size()));
         }
 
         return null;

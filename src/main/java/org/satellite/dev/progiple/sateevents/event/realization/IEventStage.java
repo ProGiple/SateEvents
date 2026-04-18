@@ -19,6 +19,10 @@ public interface IEventStage {
     String[] bossBarTitleReplacer(String title);
     EventBossBar getBossBar();
 
+    default int getLifeTime() {
+        return this.getTimer().getLifeTime();
+    }
+
     default SateEvent getEvent() {
         return this.getTimer().getEvent();
     }
