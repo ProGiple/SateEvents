@@ -1,5 +1,5 @@
 name: SateEvents
-version: '2.1'
+version: '2.1.2'
 main: org.satellite.dev.progiple.sateevents.SateEvents
 api-version: '1.16'
 depend:

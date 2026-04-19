@@ -57,11 +57,31 @@ public class Factories {
     }
 
     public Class<? extends Factory> getFactoryClass(Factory factory) {
+        return getFactoryClass(factory.getClass());
+    }
+
+    public <F extends Factory> Class<? extends Factory> getFactoryClass(Class<F> clazz) {
         for (var key : factories.keySet()) {
-            if (key.isAssignableFrom(factory.getClass()))
+            if (key.isAssignableFrom(clazz))
                 return key;
         }
 
-        return factory.getClass();
+        return getFactoryClassWithSuper(clazz);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<? extends Factory> getFactoryClassWithSuper(Class<? extends Factory> clazz) {
+        Class<? extends Factory> factoryClass = Factory.class;
+        for (Class<?> anInterface : clazz.getInterfaces()) {
+            if (factoryClass.isAssignableFrom(anInterface))
+                return (Class<? extends Factory>) anInterface;
+        }
+
+        Class<?> superClass = clazz.getSuperclass();
+        if (superClass == null) {
+            return getFactoryClassWithSuper(clazz);
+        }
+
+        return (Class<? extends Factory>) superClass;
     }
 }

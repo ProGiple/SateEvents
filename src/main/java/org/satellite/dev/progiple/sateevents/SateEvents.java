@@ -14,6 +14,8 @@ import org.satellite.dev.progiple.sateevents.event.EventStartScheduler;
 import org.satellite.dev.progiple.sateevents.event.SateEventTimer;
 import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
 import org.satellite.dev.progiple.sateevents.event.realization.impl.EventStopReason;
+import org.satellite.dev.progiple.sateevents.factories.impl.SateSchematicFactory;
+import org.satellite.dev.progiple.sateevents.factories.storage.Factories;
 import org.satellite.dev.progiple.sateevents.listeners.OnBreakBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnClickOnBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
@@ -58,6 +60,8 @@ public final class SateEvents extends LunaPlugin {
         if (Config.getBoolean("enableEventScheduler")) {
             new EventStartScheduler().runTaskAsynchronously(this);
         }
+
+        Factories.getFactoryClass(SateSchematicFactory.class);
     }
 
     @Override
