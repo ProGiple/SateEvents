@@ -14,8 +14,6 @@ import org.satellite.dev.progiple.sateevents.event.EventStartScheduler;
 import org.satellite.dev.progiple.sateevents.event.SateEventTimer;
 import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
 import org.satellite.dev.progiple.sateevents.event.realization.impl.EventStopReason;
-import org.satellite.dev.progiple.sateevents.factories.impl.SateSchematicFactory;
-import org.satellite.dev.progiple.sateevents.factories.storage.Factories;
 import org.satellite.dev.progiple.sateevents.listeners.OnBreakBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnClickOnBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
@@ -23,7 +21,6 @@ import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public final class SateEvents extends LunaPlugin {
@@ -60,8 +57,6 @@ public final class SateEvents extends LunaPlugin {
         if (Config.getBoolean("enableEventScheduler")) {
             new EventStartScheduler().runTaskAsynchronously(this);
         }
-
-        Factories.getFactoryClass(SateSchematicFactory.class);
     }
 
     @Override
@@ -111,8 +106,9 @@ public final class SateEvents extends LunaPlugin {
     public static void executeThrowable(CommandSender sender, Runnable runnable) {
         try {
             runnable.run();
-        } catch (Throwable throwable) {
-            Config.sendMessage(sender, "actionThrows", "exception-%-" + throwable.getLocalizedMessage());
+        } catch (Throwable t) {
+            instance.async(t::printStackTrace);
+            Config.sendMessage(sender, "actionThrows", "exception-%-" + t.getLocalizedMessage());
         }
     }
 }

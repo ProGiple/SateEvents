@@ -146,7 +146,10 @@ public interface IEventManager extends LunaCompleter, EventPlaceholderRequest {
     }
 
     default <E> String nullableString(E checker, Function<E, Object> val) {
-        return checker == null ? "---" : val.apply(checker).toString();
+        if (checker == null) return "---";
+        var result = val.apply(checker);
+        if (result == null) return "---";
+        return result.toString();
     }
 
     default void register() {
