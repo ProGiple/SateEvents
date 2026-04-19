@@ -145,7 +145,8 @@ public abstract class SateEvent {
     }
 
     public void removeRegion(String rgId) {
-        GuardManager.removeRegion(rgId);
+        if (GuardManager.getRegion(rgId) != null)
+            GuardManager.removeRegion(rgId);
     }
 
     public void removeRegion() {
