@@ -14,10 +14,7 @@ import org.satellite.dev.progiple.sateevents.event.realization.impl.EventStopRea
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 @UtilityClass
@@ -38,7 +35,7 @@ public class SateEventsManager {
     }
 
     public Stream<SateEvent> getLaunchedEvents() {
-        return managers.stream().map(IEventManager::getLaunched);
+        return managers.stream().map(IEventManager::getLaunched).filter(Objects::nonNull);
     }
 
     public boolean isActive() {

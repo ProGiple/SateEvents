@@ -6,7 +6,7 @@
 
   <groupId>org.satellite.dev.progiple</groupId>
   <artifactId>SateEvents</artifactId>
-  <version>2.1.1</version>
+  <version>2.1.2</version>
   <packaging>jar</packaging>
 
   <name>SateEvents</name>
@@ -96,7 +96,7 @@
       <dependency>
           <groupId>com.github.ProGiple</groupId>
           <artifactId>SateSchematics</artifactId>
-          <version>1.0.8</version>
+          <version>1.0.9</version>
           <scope>provided</scope>
       </dependency>
   </dependencies>
