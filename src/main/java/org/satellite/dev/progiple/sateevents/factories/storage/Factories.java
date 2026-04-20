@@ -23,7 +23,6 @@ public class Factories {
         register(new WorldEditSchematicFactory());
         register(new RandomSpawnSettingsFactory());
         register(new StaticSpawnSettingsFactory());
-        if (SateEvents.isSateSchematicsEnabled()) register(new SateSchematicFactory());
     }
 
     public <F extends Factory> F getFactory(Class<F> clazz, String id) {

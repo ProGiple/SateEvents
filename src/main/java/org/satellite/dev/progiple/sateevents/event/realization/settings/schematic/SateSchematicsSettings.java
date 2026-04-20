@@ -1,12 +1,16 @@
 package org.satellite.dev.progiple.sateevents.event.realization.settings.schematic;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.satellite.dev.progiple.sateevents.SateEvents;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.ISchematicSettings;
 import org.satellite.dev.progiple.sateevents.event.realization.SateEvent;
 import org.satellite.dev.progiple.sateschematics.schems.YAMLSchematic;
 import org.satellite.dev.progiple.sateschematics.schems.pasted.PastedSchematic;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -26,16 +30,15 @@ public class SateSchematicsSettings implements ISchematicSettings<YAMLSchematic,
         var list = pastedSchematics.computeIfAbsent(event, k -> new ArrayList<>());
         list.add(schem);
 
+        File file = new File(SateEvents.getInstance().getDataFolder(), "saves/" + UUID.randomUUID() + ".yml");
+        SateEvents.getInstance().async(() -> schem.save(YamlConfiguration.loadConfiguration(file)));
+
         return schem;
     }
 
     @Override
     public CompletableFuture<PastedSchematic> pasteAsync(SateEvent event, Location location, YAMLSchematic schematic) {
-        return schematic.pasteAsync(location, null).thenApply(s -> {
-            var list = pastedSchematics.computeIfAbsent(event, k -> new ArrayList<>());
-            list.add(s);
-            return s;
-        });
+        return CompletableFuture.supplyAsync(() -> paste(event, location, schematic));
     }
 
     @Override

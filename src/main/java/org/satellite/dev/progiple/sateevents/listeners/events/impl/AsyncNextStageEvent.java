@@ -7,12 +7,12 @@ import org.satellite.dev.progiple.sateevents.event.realization.IEventStage;
 import org.satellite.dev.progiple.sateevents.event.realization.SateEvent;
 import org.satellite.dev.progiple.sateevents.listeners.events.SateStagedEvent;
 
-public class NextStageEvent extends SateStagedEvent implements Cancellable {
+public class AsyncNextStageEvent extends SateStagedEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
 
     private boolean cancelled;
-    public NextStageEvent(SateEvent event, IEventStage stage) {
-        super(event, stage);
+    public AsyncNextStageEvent(SateEvent event, IEventStage stage) {
+        super(event, stage, true);
     }
 
     @Override

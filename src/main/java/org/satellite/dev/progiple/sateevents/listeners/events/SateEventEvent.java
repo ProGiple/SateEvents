@@ -13,6 +13,11 @@ public abstract class SateEventEvent extends Event {
         this.event = event;
     }
 
+    public SateEventEvent(SateEvent event, boolean async) {
+        super(async);
+        this.event = event;
+    }
+
     public boolean call() {
         Bukkit.getServer().getPluginManager().callEvent(this);
         return !(this instanceof Cancellable c) || !c.isCancelled();

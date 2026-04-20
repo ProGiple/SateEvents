@@ -21,6 +21,7 @@ org\satellite\dev\progiple\sateevents\listeners\OnBreakBlockHandler.class
 org\satellite\dev\progiple\sateevents\commands\StartSubCommand.class
 org\satellite\dev\progiple\sateevents\event\realization\impl\EventManager.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\schematic\WorldEditSchemSettings.class
+org\satellite\dev\progiple\sateevents\listeners\events\impl\AsyncNextStageEvent.class
 org\satellite\dev\progiple\sateevents\SateEvents.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\EventSettings.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\ListSettings.class
@@ -73,4 +74,3 @@ org\satellite\dev\progiple\sateevents\event\realization\settings\EventSettings$E
 org\satellite\dev\progiple\sateevents\event\realization\IEventManager.class
 org\satellite\dev\progiple\sateevents\factories\impl\LocationGen1Factory.class
 org\satellite\dev\progiple\sateevents\event\SateEventTimer.class
-org\satellite\dev\progiple\sateevents\listeners\events\impl\NextStageEvent.class

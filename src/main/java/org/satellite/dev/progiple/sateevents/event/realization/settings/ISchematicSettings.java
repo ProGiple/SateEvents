@@ -31,7 +31,10 @@ public interface ISchematicSettings<H, R> extends Settings {
     }
 
     default void removeAll(SateEvent event) {
-        new ArrayList<>(this.getPastedSchematics().get(event)).forEach(this::remove);
+        var get = this.getPastedSchematics().get(event);
+        if (get == null) return;
+
+        new ArrayList<>(get).forEach(this::remove);
         this.getPastedSchematics().remove(event);
     }
 }

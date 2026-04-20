@@ -62,7 +62,6 @@ public class StartSubCommand implements LunaExecutor {
         if (args.size() == 1) {
             return Utils.tabCompleterFiltering(SateEventsManager.getManagers()
                     .stream()
-                    .filter(m -> !m.isActive())
                     .map(IEventManager::getId), args.get(0));
         }
         else if (args.size() >= 2) {

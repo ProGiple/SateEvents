@@ -15,10 +15,11 @@ import org.satellite.dev.progiple.sateevents.event.realization.impl.EventRequest
 import org.satellite.dev.progiple.sateevents.event.realization.impl.EventStopReason;
 import org.satellite.dev.progiple.sateevents.event.realization.impl.EventTimer;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.EventSettings;
-import org.satellite.dev.progiple.sateevents.listeners.events.impl.NextStageEvent;
+import org.satellite.dev.progiple.sateevents.listeners.events.impl.AsyncNextStageEvent;
 import org.satellite.dev.progiple.sateevents.listeners.events.impl.SateEventStartEvent;
 import org.satellite.dev.progiple.sateevents.listeners.events.impl.SateEventStopEvent;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @Getter @Setter
@@ -68,7 +69,7 @@ public abstract class SateEvent {
     }
 
     public EventRequest start(@Nullable String[] args) {
-        if (this.manager.isActive(this) || this.manager.isActive(this.getSettings().getId())) {
+        if (this.manager.isActive()) {
             return EventRequest.EVENT_IS_ACTIVE_NOW;
         }
 
@@ -97,7 +98,7 @@ public abstract class SateEvent {
         IEventStage stage = stageFactory(index, null);
         if (stage == null) return EventRequest.STAGE_POOL_IS_EMPTY;
 
-        var nextStageEvent = new NextStageEvent(this, stage);
+        var nextStageEvent = new AsyncNextStageEvent(this, stage);
         if (!nextStageEvent.call()) return EventRequest.EVENT_IS_CANCELLED;
         stage = nextStageEvent.getStage();
 
@@ -108,7 +109,7 @@ public abstract class SateEvent {
     }
 
     public String getRegionId() {
-        return "sateevents-" + this.settings.getId();
+        return "sateevent-" + this.settings.getId();
     }
 
     public EventRequest createRegion(@NotNull Location location, @NotNull String regionId) {
@@ -175,6 +176,14 @@ public abstract class SateEvent {
 
         schemSettings.removeAll(this);
         return EventRequest.SUCCESS;
+    }
+
+    protected Location findLocation() {
+        return this.settings.getSpawnSettings().findLocation(this.settings);
+    }
+
+    protected CompletableFuture<Location> findLocationAsync() {
+        return this.settings.getSpawnSettings().findLocationAsync(this.settings);
     }
 
     protected abstract IEventStage stageFactory(short index, @Nullable String[] args);

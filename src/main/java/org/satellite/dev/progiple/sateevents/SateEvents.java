@@ -14,6 +14,8 @@ import org.satellite.dev.progiple.sateevents.event.EventStartScheduler;
 import org.satellite.dev.progiple.sateevents.event.SateEventTimer;
 import org.satellite.dev.progiple.sateevents.event.SateEventsManager;
 import org.satellite.dev.progiple.sateevents.event.realization.impl.EventStopReason;
+import org.satellite.dev.progiple.sateevents.factories.impl.SateSchematicFactory;
+import org.satellite.dev.progiple.sateevents.factories.storage.Factories;
 import org.satellite.dev.progiple.sateevents.listeners.OnBreakBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnClickOnBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
@@ -25,7 +27,6 @@ import java.util.stream.Collectors;
 
 public final class SateEvents extends LunaPlugin {
     @Getter private static SateEvents instance;
-    @Getter private static boolean sateSchematicsEnabled = false;
 
     @Override
     public void onEnable() {
@@ -41,7 +42,7 @@ public final class SateEvents extends LunaPlugin {
         Remover.removeBossBars();
         Bukkit.getScheduler().runTask(this, () -> {
             if (Utils.isPluginEnabled("SateSchematics")) {
-                sateSchematicsEnabled = true;
+                Factories.register(new SateSchematicFactory());
                 this.clearSchematicsInStart();
             }
 

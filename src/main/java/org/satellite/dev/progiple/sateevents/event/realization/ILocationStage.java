@@ -7,7 +7,6 @@ import java.util.function.Function;
 public interface ILocationStage extends IEventStage {
     Location getLocation();
     void setLocation(Location location);
-    Location initializeLocation();
 
     @Override
     default String[] bossBarTitleReplacer(String title) {

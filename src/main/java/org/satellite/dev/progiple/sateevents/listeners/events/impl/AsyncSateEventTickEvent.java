@@ -19,7 +19,7 @@ public class AsyncSateEventTickEvent extends SateStagedEvent {
                                    int ticked,
                                    int lifeTime,
                                    boolean isFinally) {
-        super(event, stage);
+        super(event, stage, true);
         this.tickedTime = ticked;
         this.lifeTime = lifeTime;
         this.isFinally = isFinally;

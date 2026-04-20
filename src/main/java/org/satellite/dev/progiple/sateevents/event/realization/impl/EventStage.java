@@ -41,6 +41,11 @@ public abstract class EventStage implements IEventStage {
         this.timer = timer;
     }
 
+    @Override
+    public SateEvent getEvent() {
+        return this.timer.getEvent();
+    }
+
     public EventBossBar createBossBar(ConfigurationSection section) {
         var bar = new EventBossBar(section, getEvent());
         this.bossBar = bar;

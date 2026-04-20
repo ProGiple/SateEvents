@@ -11,6 +11,7 @@ import java.util.Collection;
 public interface IEventStage {
     Collection<IEventBlock> getBlocks();
     EventTimer getTimer();
+    SateEvent getEvent();
     short getIndex();
     String getId();
     String getName();
@@ -23,8 +24,8 @@ public interface IEventStage {
         return this.getTimer().getLifeTime();
     }
 
-    default SateEvent getEvent() {
-        return this.getTimer().getEvent();
+    default IEventManager getManager() {
+        return this.getEvent().getManager();
     }
 
     default void registerBlock(IEventBlock block) {

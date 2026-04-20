@@ -3,6 +3,7 @@ package org.satellite.dev.progiple.sateevents.event.realization.impl;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
 import org.novasparkle.lunaspring.API.util.utilities.tasks.LunaTask;
 import org.satellite.dev.progiple.sateevents.event.SateEventTimer;
 import org.satellite.dev.progiple.sateevents.event.realization.SateEvent;
@@ -38,7 +39,8 @@ public class EventTimer extends LunaTask implements SateEventTimer {
         event.timerTick(true, this);
         tickEvent(true);
         if (event.nextStage() == EventRequest.STAGE_POOL_IS_EMPTY)
-            event.stop(EventStopReason.STAGE_POOL_IS_EMPTY);
+            Bukkit.getScheduler().runTask(event.getManager().getPlugin(), () ->
+                    event.stop(EventStopReason.STAGE_POOL_IS_EMPTY));
     }
 
     private void tickEvent(boolean f) {

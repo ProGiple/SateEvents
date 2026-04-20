@@ -12,4 +12,9 @@ public abstract class SateStagedEvent extends SateEventEvent {
         super(event);
         this.stage = stage;
     }
+
+    public SateStagedEvent(SateEvent event, IEventStage stage, boolean async) {
+        super(event, async);
+        this.stage = stage;
+    }
 }

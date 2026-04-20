@@ -85,7 +85,7 @@ public interface IEventManager extends LunaCompleter, EventPlaceholderRequest {
     }
 
     default EventRequest stop(EventStopReason reason) {
-        return this.getLaunched().stop(reason);
+        return this.getLaunched() == null ? EventRequest.STAGE_IS_NOT_ACTIVE_NOW : this.getLaunched().stop(reason);
     }
 
     @Description("format: WEEK_DAY(or EVERYDAY) <hours>h <minutes>m <seconds>s")
