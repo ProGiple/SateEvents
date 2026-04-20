@@ -24,7 +24,8 @@ public class TimeParser {
             long value = seconds / level.minimalValue;
             seconds -= value * level.minimalValue;
 
-            builder.append(String.format(format[0], value)).append(format[1]);
+            builder.append(String.format(format[0], value));
+            if (level != Level.SECONDS) builder.append(format[1]);
         }
 
         return builder.toString();

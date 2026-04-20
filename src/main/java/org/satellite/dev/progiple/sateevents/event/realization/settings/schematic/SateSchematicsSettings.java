@@ -25,6 +25,7 @@ public class SateSchematicsSettings implements ISchematicSettings<YAMLSchematic,
 
     @Override
     public PastedSchematic paste(SateEvent event, Location location, YAMLSchematic schematic) {
+        if (schematic == null) return null;
         var schem = schematic.paste(location, null);
 
         var list = pastedSchematics.computeIfAbsent(event, k -> new ArrayList<>());

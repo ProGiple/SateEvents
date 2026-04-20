@@ -3,6 +3,7 @@ package org.satellite.dev.progiple.sateevents.event.realization;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.satellite.dev.progiple.sateevents.event.realization.impl.EventTimer;
 import org.satellite.dev.progiple.sateevents.listeners.events.impl.EventBlockDestroyEvent;
 import org.satellite.dev.progiple.sateevents.listeners.events.impl.EventBlockPlaceEvent;
 
@@ -19,5 +20,8 @@ public interface IEventBlock {
     default boolean destroy() {
         EventBlockDestroyEvent event = new EventBlockDestroyEvent(getEvent(), getEvent().getStage(), this);
         return event.call();
+    }
+
+    default void timerTick(boolean isFinally, EventTimer timer) {
     }
 }

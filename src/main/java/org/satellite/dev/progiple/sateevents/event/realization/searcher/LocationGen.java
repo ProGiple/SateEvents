@@ -21,7 +21,7 @@ public interface LocationGen {
         if (y > settings.getCoordinateSettings().maxY() ||
                 y < settings.getCoordinateSettings().minY()) return null;
 
-        Block block = world.getBlockAt(x, y - 1, z);
+        Block block = world.getBlockAt(x, y, z);
         if (!settings.getMaterialList().isValid(block.getType())) return null;
 
         Biome biome = block.getBiome();
@@ -33,6 +33,6 @@ public interface LocationGen {
                 return null;
         }
 
-        return new Location(world, x, y, z);
+        return new Location(world, x, y + 1, z);
     }
 }

@@ -41,6 +41,13 @@ public abstract class EventStage implements IEventStage {
         this.timer = timer;
     }
 
+    public EventStage(short index, ConfigurationSection section, EventTimer timer) {
+        this.index = index;
+        this.id = section.getName();
+        this.name = section.getString("name");
+        this.timer = timer;
+    }
+
     @Override
     public SateEvent getEvent() {
         return this.timer.getEvent();
@@ -54,24 +61,15 @@ public abstract class EventStage implements IEventStage {
 
     @Override
     public EventRequest start(@Nullable String[] args) {
-        if (this.bossBar != null) {
-            SateEvent.playerIterator(bossBar::addPlayerWithConditions);
-        }
-
-        pasteBlocks();
-        this.timer.runTaskAsynchronously(getEvent().getManager().getPlugin());
+        showBossBar();
+        startTimer();
         return EventRequest.SUCCESS;
     }
 
     @Override
     public EventRequest stop(EventStopReason reason) {
-        this.timer.cancel();
-        if (this.bossBar != null) {
-            this.bossBar.delete();
-            this.bossBar = null;
-        }
-
-        removeBlocks();
+        cancelTimer();
+        deleteBossBar();
         return EventRequest.SUCCESS;
     }
 }

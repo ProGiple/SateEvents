@@ -17,8 +17,11 @@ public interface IEventStage {
     String getName();
     EventRequest stop(EventStopReason reason);
     EventRequest start(@Nullable String[] args);
-    String[] bossBarTitleReplacer(String title);
+    default String[] bossBarTitleReplacer(String title) {
+        return getManager().getReplacementInformation(0);
+    }
     EventBossBar getBossBar();
+    void setBossBar(EventBossBar bossBar);
 
     default int getLifeTime() {
         return this.getTimer().getLifeTime();
@@ -53,6 +56,33 @@ public interface IEventStage {
     default void pasteBlock(IEventBlock block) {
         registerBlock(block);
         block.place();
+    }
+
+    default void deleteBossBar() {
+        if (this.getBossBar() != null) {
+            this.getBossBar().delete();
+            this.setBossBar(null);
+        }
+    }
+
+    default void cancelTimer() {
+        this.getTimer().cancel();
+    }
+
+    default void startTimer() {
+        this.getTimer().runTaskAsynchronously(getEvent().getManager().getPlugin());
+    }
+
+    default void showBossBar() {
+        if (this.getBossBar() != null) {
+            SateEvent.playerIterator(getBossBar()::addPlayerWithConditions);
+        }
+    }
+
+    default void timerTick(boolean isFinally) {
+        if (getBossBar() != null) {
+            getBossBar().update();
+        }
     }
 
     default void pasteBlocks() {

@@ -24,13 +24,13 @@ messages:
     global:
       - ' '
       - '{SP} Следующий ивент: [name]'
-      - '{SP} Время призыва: [next_time]'
+      - '{SP} Время призыва через [nextTime]'
       - ' '
     taped:
       - ' '
-      - '{SP} Ивент [name] &fбудет в {S}[next_time]'
+      - '{SP} Ивент [name] &fбудет через {S}[nextTime]'
       - ' '
-  teleport: '{SP} Вы телепортировались к ивенту {S}%event_now_name%'
+  teleport: '{SP} Вы телепортировались к ивенту {S}[activeName]'
   locate:
     - ' '
     - '[RUNCOMMAND] {SP} Координаты ивента [name]: *%*{S}[ [x]; [y]; [z] ]*%*/event tp [id]*%*'

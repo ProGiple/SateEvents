@@ -29,27 +29,31 @@ public class EventTimer extends LunaTask implements SateEventTimer {
     public void start() {
         while (tickTimes < lifeTime) {
             if (!this.isActive()) return;
-            tickEvent(false);
-            if (event.getStage().getBossBar() != null) event.getStage().getBossBar().update();
-            event.timerTick(false, this);
             Thread.sleep(1000L);
+            tick(false);
             tickTimes++;
         }
 
-        event.timerTick(true, this);
-        tickEvent(true);
+        tick(true);
         if (event.nextStage() == EventRequest.STAGE_POOL_IS_EMPTY)
             Bukkit.getScheduler().runTask(event.getManager().getPlugin(), () ->
                     event.stop(EventStopReason.STAGE_POOL_IS_EMPTY));
     }
 
-    private void tickEvent(boolean f) {
+    protected void tick(boolean isFinally) {
+        event.timerTick(isFinally, this);
+        event.getStage().timerTick(isFinally);
+        event.getStage().getBlocks().forEach(block -> block.timerTick(isFinally, this));
+        tickEvent(isFinally);
+    }
+
+    private void tickEvent(boolean isFinally) {
         var event = new AsyncSateEventTickEvent(
                 this.event,
                 this.event.getStage(),
                 tickTimes,
                 lifeTime,
-                f);
+                isFinally);
         event.call();
     }
 }

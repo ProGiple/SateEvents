@@ -29,7 +29,9 @@ public class TeleportSubCommand implements LunaExecutor {
             return;
         }
 
-        if (!manager.isActive() || !(manager.getLaunched().getStage() instanceof ILocationStage ls)) {
+        if (!manager.isActive() ||
+                !(manager.getLaunched().getStage() instanceof ILocationStage ls) ||
+                ls.getLocation() == null) {
             Config.sendMessage(sender, "eventIsInactive", manager.getReplacementInformation(0));
             return;
         }
