@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import java.util.concurrent.CompletableFuture;
 
 public interface ISpawnSettings extends Settings {
-    CompletableFuture<Location> findLocationAsync(EventSettings settings);
-    Location findLocation(EventSettings settings);
+    EventSettings getEventSettings();
+    CompletableFuture<Location> findLocationAsync();
+    Location findLocation();
 }

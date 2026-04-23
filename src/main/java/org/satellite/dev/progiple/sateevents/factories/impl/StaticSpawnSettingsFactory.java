@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.satellite.dev.progiple.sateevents.event.realization.settings.EventSettings;
 import org.satellite.dev.progiple.sateevents.factories.SpawnSettingsFactory;
 import org.satellite.dev.progiple.sateevents.factories.storage.FactoryId;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.ISpawnSettings;
@@ -16,7 +17,7 @@ import java.util.Objects;
 @FactoryId("static")
 public class StaticSpawnSettingsFactory implements SpawnSettingsFactory {
     @Override
-    public ISpawnSettings create(ConfigurationSection section) {
+    public ISpawnSettings create(EventSettings eventSettings, ConfigurationSection section) {
         var locationSection = section.getConfigurationSection("locations");
         List<Location> list = locationSection == null ?
                 new ArrayList<>() :
@@ -38,6 +39,6 @@ public class StaticSpawnSettingsFactory implements SpawnSettingsFactory {
                         .filter(Objects::nonNull)
                         .toList();
 
-        return new StaticSpawnSettings(list);
+        return new StaticSpawnSettings(eventSettings, list);
     }
 }

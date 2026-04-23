@@ -12,29 +12,27 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface ISchematicSettings<H, R> extends Settings {
+    EventSettings getEventSettings();
     List<H> getStorage();
-    Map<SateEvent, Collection<R>> getPastedSchematics();
-    R paste(SateEvent event, Location location, H schematic);
-    CompletableFuture<R> pasteAsync(SateEvent event, Location location, H schematic);
+    Collection<R> getPastedSchematics();
+    R paste(Location location, H schematic);
+    CompletableFuture<R> pasteAsync(Location location, H schematic);
     void remove(R obj);
 
     default @Nullable H getRandomSchematic() {
         return LunaMath.getRandom(getStorage());
     }
 
-    default R pasteRandom(SateEvent event, Location location) {
-        return paste(event, location, getRandomSchematic());
+    default R pasteRandom(Location location) {
+        return paste(location, getRandomSchematic());
     }
 
-    default CompletableFuture<R> pasteAsyncRandom(SateEvent event, Location location) {
-        return pasteAsync(event, location, getRandomSchematic());
+    default CompletableFuture<R> pasteAsyncRandom(Location location) {
+        return pasteAsync(location, getRandomSchematic());
     }
 
-    default void removeAll(SateEvent event) {
-        var get = this.getPastedSchematics().get(event);
-        if (get == null) return;
-
-        new ArrayList<>(get).forEach(this::remove);
-        this.getPastedSchematics().remove(event);
+    default void removeAll() {
+        new ArrayList<>(getPastedSchematics()).forEach(this::remove);
+        this.getPastedSchematics().clear();
     }
 }

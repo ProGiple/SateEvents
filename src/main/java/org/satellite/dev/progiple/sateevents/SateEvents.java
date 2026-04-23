@@ -7,6 +7,7 @@ import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
+import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.satellite.dev.progiple.sateevents.configs.Config;
@@ -19,6 +20,8 @@ import org.satellite.dev.progiple.sateevents.factories.storage.Factories;
 import org.satellite.dev.progiple.sateevents.listeners.OnBreakBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnClickOnBlockHandler;
 import org.satellite.dev.progiple.sateevents.listeners.OnJoinLeaveHandler;
+import org.satellite.dev.progiple.sateevents.timeParsers.Parser;
+import org.satellite.dev.progiple.sateevents.timeParsers.ParserStorage;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -39,13 +42,14 @@ public final class SateEvents extends LunaPlugin {
         CommandInitializer.initialize(this, "#.commands");
         this.registerListeners(new OnClickOnBlockHandler(), new OnBreakBlockHandler(), new OnJoinLeaveHandler());
 
+        boolean sateSchemsIsEnabled = Utils.isPluginEnabled("SateSchematics");
+        if (sateSchemsIsEnabled) {
+            Factories.register(new SateSchematicFactory());
+        }
+
         Remover.removeBossBars();
         Bukkit.getScheduler().runTask(this, () -> {
-            if (Utils.isPluginEnabled("SateSchematics")) {
-                Factories.register(new SateSchematicFactory());
-                this.clearSchematicsInStart();
-            }
-
+            this.clearDataInStart(sateSchemsIsEnabled);
             for (var manager : GuardManager.getRegionContainer().getLoaded()) {
                 Set<String> toRemove = manager.getRegions().keySet().stream()
                         .filter(id -> id.startsWith("sateevent-"))
@@ -67,12 +71,12 @@ public final class SateEvents extends LunaPlugin {
         super.onDisable();
     }
 
-    private void clearSchematicsInStart() {
+    private void clearDataInStart(boolean sateSchemsIsEnabled) {
         File dir = new File(this.getDataFolder(), "saves/");
         if (dir.exists() && dir.isDirectory()) {
             for (File file : dir.listFiles()) {
                 if (file.isFile()) {
-                    Remover.removeSchematic(file);
+                    Remover.remove(file, sateSchemsIsEnabled);
                 }
             }
 
@@ -82,25 +86,35 @@ public final class SateEvents extends LunaPlugin {
 
     private void createPlaceholder() {
         this.createPlaceholder("sateevents", ((offlinePlayer, params) -> {
-            if (params.startsWith("next_time")) {
-                var eventManager = SateEventsManager.getNextManager();
-                return eventManager == null ? Config.getString("placeholders.eventPoolIsEmpty") :
+            if (params.startsWith("parse")) {
+                Parser parser; // sateevents_parse_<parser>_<seconds>
+
+                String[] split = params.split("_");
+                if (split.length == 1) return null;
+
+                long seconds;
+                if (split.length == 2) {
+                    parser = ParserStorage.getDefaultParser();
+                    seconds = LunaMath.toLong(Utils.setBracketPlaceholders(offlinePlayer, split[1]));
+                } else {
+                    parser = ParserStorage.getParser(split[1]);
+                    seconds = LunaMath.toLong(Utils.setBracketPlaceholders(offlinePlayer, split[2]));
+                }
+
+                return parser.parse(seconds);
+            }
+
+            var eventManager = SateEventsManager.getNextManager();
+            if (eventManager == null) return Config.getString("placeholders.eventPoolIsEmpty");
+
+            return switch (params) {
+                case "next_time_seconds" -> String.valueOf(eventManager.secondsToNext(LocalDateTime.now()));
+                case "next_time" ->
                         eventManager.getTimeParser().parseTime(eventManager.secondsToNext(LocalDateTime.now()));
-            }
-
-            if (params.equalsIgnoreCase("next_name")) {
-                var eventManager = SateEventsManager.getNextManager();
-                return eventManager == null ? Config.getString("placeholders.eventPoolIsEmpty") :
-                        ColorManager.color(eventManager.getDisplayName()); // Имя след. ивента
-            }
-
-            if (params.equalsIgnoreCase("next_id")) {
-                var eventManager = SateEventsManager.getNextManager();
-                return eventManager == null ? Config.getString("placeholders.eventPoolIsEmpty") :
-                        eventManager.getId(); // Айди плагина след. ивента
-            }
-
-            return null;
+                case "next_name" -> ColorManager.color(eventManager.getDisplayName()); // Имя след. ивента
+                case "next_id" -> eventManager.getId(); // Айди плагина след. ивента
+                default -> null;
+            };
         }));
     }
 

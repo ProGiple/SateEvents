@@ -4,7 +4,9 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
 import org.satellite.dev.progiple.sateevents.SateEvents;
+import org.satellite.dev.progiple.sateevents.event.realization.settings.EventSettings;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.ISchematicSettings;
 import org.satellite.dev.progiple.sateevents.event.realization.SateEvent;
 import org.satellite.dev.progiple.sateschematics.schems.YAMLSchematic;
@@ -15,36 +17,51 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Getter
-public class SateSchematicsSettings implements ISchematicSettings<YAMLSchematic, PastedSchematic> {
+public class SateSchematicsSettings implements ISchematicSettings<YAMLSchematic, @Nullable PastedSchematic> {
     private final List<YAMLSchematic> storage;
-    private final Map<SateEvent, Collection<PastedSchematic>> pastedSchematics;
-    public SateSchematicsSettings(List<YAMLSchematic> storage) {
+    private final Collection<PastedSchematic> pastedSchematics;
+    private final EventSettings eventSettings;
+    public SateSchematicsSettings(EventSettings settings, List<YAMLSchematic> storage) {
         this.storage = storage;
-        this.pastedSchematics = new HashMap<>();
+        this.eventSettings = settings;
+        this.pastedSchematics = new ArrayList<>();
+    }
+
+    protected File generateSaveFile() {
+        return new File(SateEvents.getInstance().getDataFolder(), "saves/" + UUID.randomUUID() + ".yml");
     }
 
     @Override
-    public PastedSchematic paste(SateEvent event, Location location, YAMLSchematic schematic) {
+    public @Nullable PastedSchematic paste(Location location, YAMLSchematic schematic) {
         if (schematic == null) return null;
+
         var schem = schematic.paste(location, null);
+        if (schem == null) return null;
 
-        var list = pastedSchematics.computeIfAbsent(event, k -> new ArrayList<>());
-        list.add(schem);
-
-        File file = new File(SateEvents.getInstance().getDataFolder(), "saves/" + UUID.randomUUID() + ".yml");
-        SateEvents.getInstance().async(() -> schem.save(YamlConfiguration.loadConfiguration(file)));
+        pastedSchematics.add(schem);
+        SateEvents.getInstance().async(() -> {
+            schem.save(YamlConfiguration.loadConfiguration(generateSaveFile()));
+        });
 
         return schem;
     }
 
     @Override
-    public CompletableFuture<PastedSchematic> pasteAsync(SateEvent event, Location location, YAMLSchematic schematic) {
-        return CompletableFuture.supplyAsync(() -> paste(event, location, schematic));
+    public CompletableFuture<@Nullable PastedSchematic> pasteAsync(Location location, YAMLSchematic schematic) {
+        if (schematic == null) return CompletableFuture.completedFuture(null);
+        var future = schematic.pasteAsync(location, null);
+
+        return future.thenApplyAsync(s -> {
+            if (s == null) return null;
+            pastedSchematics.add(s);
+            s.save(YamlConfiguration.loadConfiguration(generateSaveFile()));
+            return s;
+        }, r -> Bukkit.getScheduler().runTaskAsynchronously(SateEvents.getInstance(), r));
     }
 
     @Override
     public void remove(PastedSchematic schematic) {
         schematic.undoAsync();
-        pastedSchematics.forEach((k, v) -> v.remove(schematic));
+        pastedSchematics.remove(schematic);
     }
 }

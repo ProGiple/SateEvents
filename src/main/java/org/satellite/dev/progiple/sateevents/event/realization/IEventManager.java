@@ -10,7 +10,7 @@ import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.localization.Localization;
 import org.novasparkle.lunaspring.LunaPlugin;
-import org.satellite.dev.progiple.sateevents.TimeParser;
+import org.satellite.dev.progiple.sateevents.timeParsers.TimeParser;
 import org.satellite.dev.progiple.sateevents.configs.Config;
 import org.satellite.dev.progiple.sateevents.event.EventPlaceholderRequest;
 import org.satellite.dev.progiple.sateevents.event.EventTime;
@@ -161,22 +161,22 @@ public interface IEventManager extends LunaCompleter, EventPlaceholderRequest {
     }
 
     @Override
-    default String sendRequest(OfflinePlayer player, String params) {
+    default String sendRequest(OfflinePlayer player, String argument, String params) {
         if (params.endsWith("[a]")) {
             String line = params.substring(0, params.length() - 3);
-            if (this.isActive()) return Utils.setNakedPlaceholders(player, "event_" + line);
+            if (this.isActive()) return Utils.setNakedPlaceholders(player, argument + "_" + line);
             return Config.getString("placeholders.dropNotActive");
         }
 
         if (params.endsWith("[!a]")) {
             String line = params.substring(0, params.length() - 4);
-            if (!this.isActive()) return Utils.setNakedPlaceholders(player, "event_" + line);
+            if (!this.isActive()) return Utils.setNakedPlaceholders(player, argument + "_" + line);
             return Config.getString("placeholders.dropIsActive");
         }
 
         if (params.endsWith("[tr]")) {
             String line = params.substring(0, params.length() - 4);
-            String value = Utils.setNakedPlaceholders(player, "event_" + line);
+            String value = Utils.setNakedPlaceholders(player, argument + "_" + line);
 
             String localize = Localization.translate("satevents." + value, () -> value);
             return localize == null ? value : ColorManager.color(localize);
@@ -189,6 +189,9 @@ public interface IEventManager extends LunaCompleter, EventPlaceholderRequest {
             }
             case "next_time" -> {
                 return getTimeParser().parseTime(secondsToNext(LocalDateTime.now()));
+            }
+            case "next_time_seconds" -> {
+                return String.valueOf(secondsToNext(LocalDateTime.now()));
             }
             case "name" -> {
                 return this.getDisplayName();

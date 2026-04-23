@@ -17,8 +17,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.satellite.dev.progiple.sateevents.SateEvents;
+import org.satellite.dev.progiple.sateevents.event.realization.settings.EventSettings;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.ISchematicSettings;
-import org.satellite.dev.progiple.sateevents.event.realization.SateEvent;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,32 +29,30 @@ import java.util.concurrent.CompletableFuture;
 @Getter
 public class WorldEditSchemSettings implements ISchematicSettings<File, Operation> {
     private final List<File> storage;
-    private final Map<SateEvent, Collection<Operation>> pastedSchematics;
-    public WorldEditSchemSettings(List<File> files) {
+    private final Collection<Operation> pastedSchematics;
+    private final EventSettings eventSettings;
+    public WorldEditSchemSettings(EventSettings settings, List<File> files) {
         this.storage = files;
-        this.pastedSchematics = new HashMap<>();
+        this.eventSettings = settings;
+        this.pastedSchematics = new ArrayList<>();
     }
 
     @Override
-    public Operation paste(SateEvent event, Location location, File file) {
+    public Operation paste(Location location, File file) {
         var session = pasteClipboard(location, loadClipboard(file));
-        var list = pastedSchematics.computeIfAbsent(event, k -> new ArrayList<>());
-        list.add(session);
+        pastedSchematics.add(session);
         return session;
     }
 
     @Override
-    public CompletableFuture<Operation> pasteAsync(SateEvent event, Location location, File file) {
+    public CompletableFuture<Operation> pasteAsync(Location location, File file) {
         return CompletableFuture.supplyAsync(() -> loadClipboard(file)).thenCompose(clipboard -> {
             CompletableFuture<Operation> future = new CompletableFuture<>();
 
             Bukkit.getServer().getScheduler().runTask(SateEvents.getInstance(), () -> {
                 try {
                     var editSession = pasteClipboard(location, clipboard);
-
-                    var list = pastedSchematics.computeIfAbsent(event, k -> new ArrayList<>());
-                    list.add(editSession);
-
+                    pastedSchematics.add(editSession);
                     future.complete(editSession);
                 } catch (Exception e) {
                     future.completeExceptionally(e);
@@ -68,7 +66,7 @@ public class WorldEditSchemSettings implements ISchematicSettings<File, Operatio
     @Override
     public void remove(Operation obj) {
         obj.cancel();
-        pastedSchematics.forEach((k, v) -> v.remove(obj));
+        pastedSchematics.remove(obj);
     }
 
     private Clipboard loadClipboard(File file) {

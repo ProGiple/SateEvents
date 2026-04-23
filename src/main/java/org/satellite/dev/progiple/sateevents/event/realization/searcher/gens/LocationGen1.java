@@ -1,25 +1,23 @@
 package org.satellite.dev.progiple.sateevents.event.realization.searcher.gens;
 
-import org.bukkit.Chunk;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
+import org.satellite.dev.progiple.sateevents.SateEvents;
 import org.satellite.dev.progiple.sateevents.configs.Config;
 import org.satellite.dev.progiple.sateevents.event.realization.searcher.LocationGen;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.EventSettings;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.spawn.RandomSpawnSettings;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class LocationGen1 implements LocationGen {
     @Override
     public CompletableFuture<Location> findLocationAsync(World world, RandomSpawnSettings settings, EventSettings eventSettings) {
-        return CompletableFuture.supplyAsync(() -> this.findLocation(world, settings, eventSettings));
+        return CompletableFuture.supplyAsync(
+                () -> this.findLocation(world, settings, eventSettings),
+                r -> Bukkit.getScheduler().runTaskAsynchronously(SateEvents.getInstance(), r));
     }
 
     @Override

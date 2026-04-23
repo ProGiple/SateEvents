@@ -3,7 +3,7 @@ package org.satellite.dev.progiple.sateevents.event.realization.impl;
 import lombok.Getter;
 import lombok.Setter;
 import org.novasparkle.lunaspring.LunaPlugin;
-import org.satellite.dev.progiple.sateevents.TimeParser;
+import org.satellite.dev.progiple.sateevents.timeParsers.TimeParser;
 import org.satellite.dev.progiple.sateevents.event.EventTime;
 import org.satellite.dev.progiple.sateevents.event.realization.IEventManager;
 import org.satellite.dev.progiple.sateevents.event.realization.SateEvent;

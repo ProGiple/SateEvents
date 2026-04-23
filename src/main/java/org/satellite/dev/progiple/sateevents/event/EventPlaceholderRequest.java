@@ -5,13 +5,13 @@ import org.novasparkle.lunaspring.LunaPlugin;
 
 @FunctionalInterface
 public interface EventPlaceholderRequest {
-    String sendRequest(OfflinePlayer player, String params);
+    String sendRequest(OfflinePlayer player, String argument, String params);
 
     default void registerPlaceholder(String identifier, LunaPlugin plugin) {
-        plugin.createPlaceholder(identifier, this::sendRequest);
+        plugin.createPlaceholder(identifier, (o, p) -> sendRequest(o, identifier, p));
     }
 
     default void registerPlaceholder(LunaPlugin plugin) {
-        plugin.createPlaceholder(this::sendRequest);
+        registerPlaceholder(plugin.getName().toLowerCase(), plugin);
     }
 }

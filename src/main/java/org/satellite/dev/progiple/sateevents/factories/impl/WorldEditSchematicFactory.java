@@ -1,6 +1,7 @@
 package org.satellite.dev.progiple.sateevents.factories.impl;
 
 import org.satellite.dev.progiple.sateevents.SateEvents;
+import org.satellite.dev.progiple.sateevents.event.realization.settings.EventSettings;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.ISchematicSettings;
 import org.satellite.dev.progiple.sateevents.factories.SchematicSettingsFactory;
 import org.satellite.dev.progiple.sateevents.factories.storage.FactoryId;
@@ -13,7 +14,7 @@ import java.util.List;
 @FactoryId("worldedit")
 public class WorldEditSchematicFactory implements SchematicSettingsFactory {
     @Override
-    public ISchematicSettings<?, ?> create(List<String> storage) {
+    public ISchematicSettings<?, ?> create(EventSettings settings, List<String> storage) {
         File dir = new File(SateEvents.getInstance().getDataFolder(), "worldedit/");
 
         List<File> files = new ArrayList<>();
@@ -25,6 +26,6 @@ public class WorldEditSchematicFactory implements SchematicSettingsFactory {
             }
         }
 
-        return new WorldEditSchemSettings(files);
+        return new WorldEditSchemSettings(settings, files);
     }
 }

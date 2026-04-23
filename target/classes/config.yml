@@ -13,31 +13,33 @@ placeholders:
   isNotNext: "Не следующий"
   locationIsNull: "---"
 messages:
-  actionThrows: "{SP} Упс. Во время выполнения произошла ошибка: {E}[exception]"
-  eventPoolIsEmpty: "{SP} Доступных ивентов не было найдено!"
+  nextStage: "{SP} Вы успешно пропустили этап ивента [name]! &7([prevStageName])"
+  nextStageError: "{SPE} Этот этап &7([stageName])&f ивента [name]&f помечен как обязательный!"
+  actionThrows: "{SPE} Упс. Во время выполнения произошла ошибка: {E}[exception]"
+  eventPoolIsEmpty: "{SPE} Доступных ивентов не было найдено!"
   reload: '{SP} Вы успешно перезагрузили плагин!'
-  eventIsInactive: '{SP} Ивент [id] еще не активен!'
-  eventsAreInactive: "{SP} Сейчас не запущено ни одного ивента!"
-  eventIsActive: '{SP} Ивент [name] уже активен!'
-  eventNotExists: '{E}{SPR} Ивента {E}[id] &fне существует!'
+  eventIsInactive: '{SPE} Ивент [id] еще не активен!'
+  eventsAreInactive: "{SPE} Сейчас не запущено ни одного ивента!"
+  eventIsActive: '{SPE} Ивент [name] уже активен!'
+  eventNotExists: '{SPE} Ивента {E}[id] &fне существует!'
   delayNext:
     global:
       - ' '
       - '{SP} Следующий ивент: [name]'
-      - '{SP} Время призыва: [next_time]'
+      - '{SP} Время призыва через [nextTime]'
       - ' '
     taped:
       - ' '
-      - '{SP} Ивент [name] &fбудет в {S}[next_time]'
+      - '{SP} Ивент [name] &fбудет через {S}[nextTime]'
       - ' '
-  teleport: '{SP} Вы телепортировались к ивенту {S}%event_now_name%'
+  teleport: '{SP} Вы телепортировались к ивенту {S}[activeName]'
   locate:
     - ' '
     - '[RUNCOMMAND] {SP} Координаты ивента [name]: *%*{S}[ [x]; [y]; [z] ]*%*/event tp [id]*%*'
     - '{SP} Мир локации ивента: {S}[world]'
     - ' '
   compass: '{L}{SPR} Вы успешно установили стрелку компаса на {L}ивент!'
-  noCompass: '{E}{SPR} Возьмите для начала в руку компас!'
+  noCompass: '{SPE} Возьмите для начала в руку компас!'
   start: '{SP} Вы успешно запустили ивент {S}[name]'
   stop: '{SP} Вы успешно остановили ивент [name]!'
   stopAll: '{SP} Вы успешно остановили все ивенты!'

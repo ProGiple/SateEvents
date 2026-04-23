@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
-import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.satellite.dev.progiple.sateevents.factories.SchematicSettingsFactory;
 import org.satellite.dev.progiple.sateevents.factories.SpawnSettingsFactory;
 import org.satellite.dev.progiple.sateevents.factories.storage.Factories;
@@ -31,21 +30,8 @@ public class EventSettings implements Settings {
             this.regionSettings = new RegionSettings(0, null);
         }
         else {
-            Map<Flag<?>, Object> flags;
-
             ConfigurationSection flagSection = region.getConfigurationSection("flags");
-            if (flagSection != null && GuardManager.flags() != null) {
-                flags = new HashMap<>();
-
-                var registry = GuardManager.flags().getRegistry();
-                flagSection.getKeys(false).forEach(key -> {
-                    var flag = registry.get(key);
-                    if (flag != null) flags.put(flag, flagSection.get(key));
-                });
-            }
-            else {
-                flags = null;
-            }
+            Map<Flag<?>, Object> flags = RegionSettings.getFlags(flagSection);
 
             this.regionSettings = new RegionSettings(region.getInt("size"), flags);
         }
@@ -57,7 +43,7 @@ public class EventSettings implements Settings {
             String type = schematic.getString("type", "sateschematics");
 
             List<String> lines = schematic.getStringList("schems");
-            this.schematicSettings = Factories.getFactory(SchematicSettingsFactory.class, type).create(lines);
+            this.schematicSettings = Factories.getFactory(SchematicSettingsFactory.class, type).create(this, lines);
         }
         else {
             this.schematicSettings = null;
@@ -81,6 +67,7 @@ public class EventSettings implements Settings {
         if (section == null) {
             WorldBorder border = Bukkit.getWorlds().get(0).getWorldBorder();
             return new RandomSpawnSettings(
+                    this,
                     Bukkit.getWorlds(),
                     new CoordinateSettings(
                             border.getCenter().getBlockX(),
@@ -97,6 +84,6 @@ public class EventSettings implements Settings {
         }
 
         String spawnType = section.getString("type", "random");
-        return Factories.getFactory(SpawnSettingsFactory.class, spawnType).create(section);
+        return Factories.getFactory(SpawnSettingsFactory.class, spawnType).create(this, section);
     }
 }

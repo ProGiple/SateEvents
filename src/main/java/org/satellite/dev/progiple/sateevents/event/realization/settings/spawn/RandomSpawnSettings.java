@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class RandomSpawnSettings implements ISpawnSettings {
+    private final EventSettings eventSettings;
     private final List<World> allowedWorlds;
     private final CoordinateSettings coordinateSettings;
     private final ListSettings<Material> materialList;
@@ -25,11 +26,13 @@ public class RandomSpawnSettings implements ISpawnSettings {
     private final LocationGen locationGen;
 
     @Builder
-    public RandomSpawnSettings(List<World> worlds,
+    public RandomSpawnSettings(EventSettings settings,
+                               List<World> worlds,
                                CoordinateSettings coordinates,
                                ListSettings<Material> materials,
                                ListSettings<Biome> biomes,
                                LocationGen locationGen) {
+        this.eventSettings = settings;
         this.allowedWorlds = worlds;
         this.coordinateSettings = coordinates;
         this.materialList = materials;
@@ -38,13 +41,13 @@ public class RandomSpawnSettings implements ISpawnSettings {
     }
 
     @Override
-    public CompletableFuture<Location> findLocationAsync(EventSettings settings) {
+    public CompletableFuture<Location> findLocationAsync() {
         World world = LunaMath.getRandom(this.allowedWorlds);
-        return this.locationGen.findLocationAsync(world, this, settings);
+        return this.locationGen.findLocationAsync(world, this, eventSettings);
     }
 
     @Override
-    public Location findLocation(EventSettings eventSettings) {
+    public Location findLocation() {
         World world = LunaMath.getRandom(this.allowedWorlds);
         return this.locationGen.findLocation(world, this, eventSettings);
     }

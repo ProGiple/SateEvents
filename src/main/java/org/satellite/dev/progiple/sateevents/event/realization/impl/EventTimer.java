@@ -27,11 +27,11 @@ public class EventTimer extends LunaTask implements SateEventTimer {
     @Override @SneakyThrows
     @SuppressWarnings("all")
     public void start() {
-        while (tickTimes < lifeTime) {
+        while (tickTimes <= lifeTime) {
             if (!this.isActive()) return;
-            Thread.sleep(1000L);
             tick(false);
             tickTimes++;
+            Thread.sleep(1000L);
         }
 
         tick(true);
@@ -42,8 +42,10 @@ public class EventTimer extends LunaTask implements SateEventTimer {
 
     protected void tick(boolean isFinally) {
         event.timerTick(isFinally, this);
-        event.getStage().timerTick(isFinally);
-        event.getStage().getBlocks().forEach(block -> block.timerTick(isFinally, this));
+        if (event.getStage() != null) {
+            event.getStage().timerTick(isFinally);
+            event.getStage().getBlocks().forEach(block -> block.timerTick(isFinally, this));
+        }
         tickEvent(isFinally);
     }
 

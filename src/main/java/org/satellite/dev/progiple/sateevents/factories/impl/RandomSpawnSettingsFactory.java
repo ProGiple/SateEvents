@@ -6,14 +6,11 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
+import org.satellite.dev.progiple.sateevents.event.realization.settings.*;
 import org.satellite.dev.progiple.sateevents.factories.LocationGenFactory;
 import org.satellite.dev.progiple.sateevents.factories.SpawnSettingsFactory;
 import org.satellite.dev.progiple.sateevents.factories.storage.Factories;
 import org.satellite.dev.progiple.sateevents.factories.storage.FactoryId;
-import org.satellite.dev.progiple.sateevents.event.realization.settings.CoordinateSettings;
-import org.satellite.dev.progiple.sateevents.event.realization.settings.FilterType;
-import org.satellite.dev.progiple.sateevents.event.realization.settings.ListSettings;
-import org.satellite.dev.progiple.sateevents.event.realization.settings.ISpawnSettings;
 import org.satellite.dev.progiple.sateevents.event.realization.settings.spawn.RandomSpawnSettings;
 
 import java.util.List;
@@ -23,7 +20,7 @@ import java.util.function.Function;
 @FactoryId("random")
 public class RandomSpawnSettingsFactory implements SpawnSettingsFactory {
     @Override
-    public ISpawnSettings create(ConfigurationSection section) {
+    public ISpawnSettings create(EventSettings settings, ConfigurationSection section) {
         List<World> worlds = section.getStringList("worlds")
                 .stream()
                 .map(Bukkit::getWorld)
@@ -53,7 +50,7 @@ public class RandomSpawnSettingsFactory implements SpawnSettingsFactory {
                 s -> Utils.getEnumValue(Biome.class, s.toUpperCase()));
 
         String genId = section.getString("locationGenId", "gen1");
-        return new RandomSpawnSettings(worlds, coords, materialList, biomeList,
+        return new RandomSpawnSettings(settings, worlds, coords, materialList, biomeList,
                 Factories.getFactory(LocationGenFactory.class, genId).create());
     }
 

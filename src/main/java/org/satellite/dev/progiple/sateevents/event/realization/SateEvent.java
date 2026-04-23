@@ -9,8 +9,10 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.novasparkle.lunaspring.API.configuration.Configuration;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
-import org.satellite.dev.progiple.sateevents.TimeParser;
+import org.satellite.dev.progiple.sateevents.SateEvents;
+import org.satellite.dev.progiple.sateevents.timeParsers.TimeParser;
 import org.satellite.dev.progiple.sateevents.event.realization.impl.EventRequest;
 import org.satellite.dev.progiple.sateevents.event.realization.impl.EventStopReason;
 import org.satellite.dev.progiple.sateevents.event.realization.impl.EventTimer;
@@ -19,12 +21,15 @@ import org.satellite.dev.progiple.sateevents.listeners.events.impl.AsyncNextStag
 import org.satellite.dev.progiple.sateevents.listeners.events.impl.SateEventStartEvent;
 import org.satellite.dev.progiple.sateevents.listeners.events.impl.SateEventStopEvent;
 
+import java.io.File;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @Getter @Setter
 public abstract class SateEvent {
     private final IEventManager manager;
+    private Configuration savesConfig = new Configuration(new File(SateEvents.getInstance().getDataFolder(), "saves/" + UUID.randomUUID() + ".yml"));
     private EventSettings settings;
     private IEventStage stage;
     protected short startIndex = 0;
@@ -158,7 +163,7 @@ public abstract class SateEvent {
          var schemSettings = this.settings.getSchematicSettings();
          if (schemSettings == null) return EventRequest.SCHEMATICS_ARE_DISABLED;
 
-         var result = schemSettings.pasteRandom(this, location);
+         var result = schemSettings.pasteRandom(location);
          return result == null ? EventRequest.SCHEMATIC_IS_NULL : EventRequest.SUCCESS;
     }
 
@@ -166,7 +171,7 @@ public abstract class SateEvent {
         var schemSettings = this.settings.getSchematicSettings();
         if (schemSettings == null) return EventRequest.SCHEMATICS_ARE_DISABLED;
 
-        schemSettings.pasteAsyncRandom(this, location);
+        schemSettings.pasteAsyncRandom(location);
         return EventRequest.SUCCESS;
     }
 
@@ -174,16 +179,16 @@ public abstract class SateEvent {
         var schemSettings = this.settings.getSchematicSettings();
         if (schemSettings == null) return EventRequest.SCHEMATICS_ARE_DISABLED;
 
-        schemSettings.removeAll(this);
+        schemSettings.removeAll();
         return EventRequest.SUCCESS;
     }
 
     protected Location findLocation() {
-        return this.settings.getSpawnSettings().findLocation(this.settings);
+        return this.settings.getSpawnSettings().findLocation();
     }
 
     protected CompletableFuture<Location> findLocationAsync() {
-        return this.settings.getSpawnSettings().findLocationAsync(this.settings);
+        return this.settings.getSpawnSettings().findLocationAsync();
     }
 
     protected abstract IEventStage stageFactory(short index, @Nullable String[] args);
