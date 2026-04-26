@@ -3,6 +3,7 @@ org\satellite\dev\progiple\sateevents\listeners\OnJoinLeaveHandler.class
 org\satellite\dev\progiple\sateevents\commands\LocateSubCommand.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\FilterType.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\spawn\RandomSpawnSettings.class
+org\satellite\dev\progiple\sateevents\EventUtils$Remover.class
 org\satellite\dev\progiple\sateevents\event\EventPlaceholderRequest.class
 org\satellite\dev\progiple\sateevents\listeners\events\impl\EventBlockDestroyEvent.class
 org\satellite\dev\progiple\sateevents\listeners\events\impl\AsyncSateEventTickEvent.class
@@ -10,6 +11,7 @@ org\satellite\dev\progiple\sateevents\listeners\events\EventBlockEvent.class
 org\satellite\dev\progiple\sateevents\factories\LocationGenFactory.class
 org\satellite\dev\progiple\sateevents\event\SateEventsManager.class
 org\satellite\dev\progiple\sateevents\factories\SpawnSettingsFactory.class
+org\satellite\dev\progiple\sateevents\listeners\events\impl\ClearConfigAttemptEvent.class
 org\satellite\dev\progiple\sateevents\event\EventStartScheduler.class
 org\satellite\dev\progiple\sateevents\event\realization\searcher\LocationGen.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\FilterType$1.class
@@ -29,7 +31,6 @@ org\satellite\dev\progiple\sateevents\timeParsers\Parser.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\ListSettings.class
 org\satellite\dev\progiple\sateevents\listeners\events\SateEventEvent.class
 org\satellite\dev\progiple\sateevents\factories\impl\SateSchematicFactory.class
-org\satellite\dev\progiple\sateevents\Remover.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\spawn\RandomSpawnSettings$RandomSpawnSettingsBuilder.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\ISpawnSettings.class
 org\satellite\dev\progiple\sateevents\timeParsers\ParserStorage.class
@@ -43,7 +44,6 @@ org\satellite\dev\progiple\sateevents\factories\impl\StaticSpawnSettingsFactory.
 org\satellite\dev\progiple\sateevents\event\realization\settings\CoordinateSettings.class
 org\satellite\dev\progiple\sateevents\listeners\events\SateStagedEvent.class
 org\satellite\dev\progiple\sateevents\listeners\events\impl\SateEventStartEvent.class
-org\satellite\dev\progiple\sateevents\timeParsers\ParsingLevel.class
 org\satellite\dev\progiple\sateevents\event\realization\impl\EventTimer.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\Settings.class
 org\satellite\dev\progiple\sateevents\event\EventTime.class
@@ -55,6 +55,7 @@ org\satellite\dev\progiple\sateevents\factories\storage\FactoryId.class
 org\satellite\dev\progiple\sateevents\commands\templates\EventStartSubCommand.class
 org\satellite\dev\progiple\sateevents\event\realization\settings\ISchematicSettings.class
 org\satellite\dev\progiple\sateevents\commands\templates\AbstractTemplateSubCommand.class
+org\satellite\dev\progiple\sateevents\EventUtils.class
 org\satellite\dev\progiple\sateevents\commands\ReloadSubCommand.class
 org\satellite\dev\progiple\sateevents\event\realization\impl\EventStopReason.class
 org\satellite\dev\progiple\sateevents\event\realization\IEventBlock.class

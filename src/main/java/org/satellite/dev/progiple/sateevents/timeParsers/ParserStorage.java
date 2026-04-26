@@ -20,8 +20,9 @@ public class ParserStorage {
     private final Parser defaultParser;
     static {
         parsers = new HashMap<>();
-        defaultParser = new SameParser(new String[]{"%02d", ":"});
+        defaultParser = new SameParser(":");
         register("same", defaultParser);
+        register("point", new SameParser("."));
         register("named", new NamedParser(new String[]{"д.", "ч.", "м.", "c."}));
         register("named_en", new NamedParser(new String[]{"d", "h", "m", "s"}));
     }
