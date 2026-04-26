@@ -57,6 +57,7 @@ public abstract class SateEvent {
     }
 
     public EventRequest stop(EventStopReason reason) {
+        this.savesConfig.getFile().delete();
         if (this.stage == null)
             return EventRequest.STAGE_IS_NOT_ACTIVE_NOW;
 
@@ -101,7 +102,15 @@ public abstract class SateEvent {
         index++;
 
         IEventStage stage = stageFactory(index, null);
-        if (stage == null) return EventRequest.STAGE_POOL_IS_EMPTY;
+        if (stage == null) {
+            Runnable r = () -> stop(EventStopReason.STAGE_POOL_IS_EMPTY);
+            if (Bukkit.isPrimaryThread())
+                r.run();
+            else
+                Bukkit.getScheduler().runTask(getManager().getPlugin(), r);
+
+            return EventRequest.STAGE_POOL_IS_EMPTY;
+        }
 
         var nextStageEvent = new AsyncNextStageEvent(this, stage);
         if (!nextStageEvent.call()) return EventRequest.EVENT_IS_CANCELLED;
@@ -183,17 +192,18 @@ public abstract class SateEvent {
         return EventRequest.SUCCESS;
     }
 
-    protected Location findLocation() {
+    public Location findLocation() {
         return this.settings.getSpawnSettings().findLocation();
     }
 
-    protected CompletableFuture<Location> findLocationAsync() {
+    public CompletableFuture<Location> findLocationAsync() {
         return this.settings.getSpawnSettings().findLocationAsync();
     }
 
     protected abstract IEventStage stageFactory(short index, @Nullable String[] args);
 
-    public abstract void timerTick(boolean isFinally, EventTimer timer);
+    public void timerTick(boolean isFinally, EventTimer timer) {
+    }
 
     public static void playerIterator(Consumer<Player> playerConsumer) {
         var list = Bukkit.getOnlinePlayers();

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 @UtilityClass
 public class ParserStorage {
-    public final Pattern IDENTIFIER_PATTERN = Pattern.compile("^[a-zA-Z0-9-]+$");
+    public final Pattern IDENTIFIER_PATTERN = Pattern.compile("^[a-zA-Z0-9_]+$");
     private final Map<String, Parser> parsers;
     @Getter
     private final Parser defaultParser;
@@ -23,7 +23,7 @@ public class ParserStorage {
         defaultParser = new SameParser(new String[]{"%02d", ":"});
         register("same", defaultParser);
         register("named", new NamedParser(new String[]{"д.", "ч.", "м.", "c."}));
-        register("named-en", new NamedParser(new String[]{"d", "h", "m", "s"}));
+        register("named_en", new NamedParser(new String[]{"d", "h", "m", "s"}));
     }
 
     @Nullable

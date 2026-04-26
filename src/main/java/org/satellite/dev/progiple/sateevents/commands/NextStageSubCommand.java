@@ -42,7 +42,7 @@ public class NextStageSubCommand implements LunaExecutor {
         String[] rpl = manager.getReplacementInformation(2);
         rpl[rpl.length - 1] = "prevStageName-%-" + stage.getName();
         rpl[rpl.length - 2] = "prevStageId-%-" + stage.getId();
-        Config.sendMessage(sender, "nextStageError", rpl);
+        Config.sendMessage(sender, "nextStage", rpl);
     }
 
     @Override

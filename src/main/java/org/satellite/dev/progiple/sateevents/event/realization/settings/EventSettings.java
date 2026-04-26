@@ -77,8 +77,8 @@ public class EventSettings implements Settings {
                             border.getCenter().getBlockZ(),
                             (int) (border.getSize() / 2)
                     ),
-                    new ListSettings<>(List.of(), FilterType.BLACKLIST),
-                    new ListSettings<>(List.of(), FilterType.BLACKLIST),
+                    new ListSettings<>(Set.of(), FilterType.BLACKLIST),
+                    new ListSettings<>(Set.of(), FilterType.BLACKLIST),
                     new LocationGen1()
             );
         }

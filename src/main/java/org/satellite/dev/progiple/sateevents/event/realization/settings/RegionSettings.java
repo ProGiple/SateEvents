@@ -3,6 +3,7 @@ package org.satellite.dev.progiple.sateevents.event.realization.settings;
 import com.sk89q.worldguard.protection.flags.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +28,13 @@ public record RegionSettings(int size, Map<Flag<?>, Object> flags) implements Se
     private static Object unmarshalFlag(Flag<?> flag, Object value) {
         if (value == null) return null;
 
-        if (flag instanceof StateFlag && value instanceof Boolean) {
-            return ((Boolean) value) ? StateFlag.State.ALLOW : StateFlag.State.DENY;
+        if (flag instanceof StateFlag) {
+            if (value instanceof Boolean bool) {
+                return bool ? StateFlag.State.ALLOW : StateFlag.State.DENY;
+            }
+            else {
+                return Utils.getEnumValue(StateFlag.State.class, value.toString().toUpperCase(), StateFlag.State.DENY);
+            }
         }
 
         if (flag instanceof DoubleFlag && value instanceof Number) {

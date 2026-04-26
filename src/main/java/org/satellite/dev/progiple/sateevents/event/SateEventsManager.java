@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.LunaPAPIExpansion;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.localization.Localization;
@@ -68,11 +69,15 @@ public class SateEventsManager {
     }
 
     public SateEvent getNearestEvent(Location location) {
-        return getLaunchedEvents()
+        List<SateEvent> events = getLaunchedEvents().toList();
+        if (events.isEmpty()) return null;
+
+        return events
+                .stream()
                 .filter(e -> e.getStage() instanceof ILocationStage loc &&
                         loc.getLocation() != null &&
                         loc.getLocation().getWorld().equals(location.getWorld()))
                 .min(Comparator.comparingDouble(e -> ((ILocationStage) e.getStage()).getLocation().distance(location)))
-                .orElse(null);
+                .orElse(LunaMath.getRandom(events));
     }
 }

@@ -1,6 +1,7 @@
 package org.satellite.dev.progiple.sateevents.event.realization;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -25,13 +26,20 @@ public interface IEventBlock {
         return "blocks." + l.getWorld().getName() + ";" + l.getBlockX() + ";" + l.getBlockY() + ";" + l.getBlockZ();
     }
 
-    default void saveState() {
-        this.getEvent().getSavesConfig().set(getConfigPath(), getBlock().getBlockData().getAsString());
+    default boolean saveState() {
+        String val = this.getEvent().getSavesConfig().getString(getConfigPath());
+        if (val != null) return false;
+
+        val = getBlock().getBlockData().getAsString();
+        if (val.isEmpty()) val = Material.AIR.createBlockData().getAsString();
+
+        this.getEvent().getSavesConfig().set(getConfigPath(), val);
         this.getEvent().getSavesConfig().save();
+        return true;
     }
 
-    default void saveStateAsync() {
-        CompletableFuture.runAsync(this::saveState);
+    default CompletableFuture<Boolean> saveStateAsync() {
+        return CompletableFuture.supplyAsync(this::saveState);
     }
 
     default void unsaveState() {

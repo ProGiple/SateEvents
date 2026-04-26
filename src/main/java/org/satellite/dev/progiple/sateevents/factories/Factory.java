@@ -5,7 +5,7 @@ import org.satellite.dev.progiple.sateevents.factories.storage.FactoryId;
 
 public interface Factory {
     default Class<? extends Factory> getFactoryClass() {
-        return Factories.getFactoryClass(this);
+        return Factories.getFactoryProvider(this);
     }
 
     default String getId() {

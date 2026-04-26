@@ -27,7 +27,7 @@ public class EventTimer extends LunaTask implements SateEventTimer {
     @Override @SneakyThrows
     @SuppressWarnings("all")
     public void start() {
-        while (tickTimes <= lifeTime) {
+        while (tickTimes < lifeTime) {
             if (!this.isActive()) return;
             tick(false);
             tickTimes++;
@@ -35,9 +35,7 @@ public class EventTimer extends LunaTask implements SateEventTimer {
         }
 
         tick(true);
-        if (event.nextStage() == EventRequest.STAGE_POOL_IS_EMPTY)
-            Bukkit.getScheduler().runTask(event.getManager().getPlugin(), () ->
-                    event.stop(EventStopReason.STAGE_POOL_IS_EMPTY));
+        event.nextStage();
     }
 
     protected void tick(boolean isFinally) {

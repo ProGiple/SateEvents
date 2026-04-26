@@ -8,8 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.*;
 
 public record EventTime(@Nullable DayOfWeek dayOfWeek, short hour, short minute, short second) implements Temporal, TemporalAdjuster {
-
-    // ==================== Константы ====================
     private static final TemporalUnit[] SUPPORTED_UNITS = {
             ChronoUnit.SECONDS,
             ChronoUnit.MINUTES,
@@ -25,8 +23,6 @@ public record EventTime(@Nullable DayOfWeek dayOfWeek, short hour, short minute,
             ChronoField.DAY_OF_WEEK,
             ChronoField.ALIGNED_WEEK_OF_MONTH
     };
-
-    // ==================== Фабричные методы ====================
 
     public static EventTime of(LocalDateTime dateTime) {
         return new EventTime(
@@ -45,8 +41,6 @@ public record EventTime(@Nullable DayOfWeek dayOfWeek, short hour, short minute,
                 (short) time.getSecond()
         );
     }
-
-    // ==================== Методы доступа ====================
 
     public long getFullSeconds() {
         return hour * 3600 + minute * 60 + second;
@@ -108,8 +102,6 @@ public record EventTime(@Nullable DayOfWeek dayOfWeek, short hour, short minute,
         if (dayOfWeek == null) return time;
         else return time && source.getDayOfWeek() == this.dayOfWeek;
     }
-
-    // ==================== Реализация Temporal ====================
 
     @Override
     public boolean isSupported(TemporalField field) {
@@ -210,8 +202,6 @@ public record EventTime(@Nullable DayOfWeek dayOfWeek, short hour, short minute,
         return plus(-amountToSubtract, unit);
     }
 
-    // ==================== Реализация TemporalAdjuster ====================
-
     @Override
     public Temporal adjustInto(Temporal temporal) {
         if (temporal instanceof LocalDateTime ldt) {
@@ -240,8 +230,6 @@ public record EventTime(@Nullable DayOfWeek dayOfWeek, short hour, short minute,
 
         throw new DateTimeException("Cannot adjust " + temporal.getClass().getSimpleName() + " to EventTime");
     }
-
-    // ==================== Дополнительные методы ====================
 
     public EventTime withDayOfWeek(DayOfWeek newDay) {
         return new EventTime(newDay, hour, minute, second);

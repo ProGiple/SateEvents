@@ -20,7 +20,7 @@ public class OnClickOnBlockHandler implements Listener {
         var eventBlock = SateEventsManager.getEventBlock(block);
         if (eventBlock != null) {
             if (uuidCooldownPrevent.isCancelled(e, e.getPlayer().getUniqueId())) e.setCancelled(true);
-            else eventBlock.onInteract(e);
+            else if (eventBlock.onInteract(e)) e.setCancelled(true);
         }
     }
 }

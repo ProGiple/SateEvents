@@ -1,7 +1,6 @@
 package org.satellite.dev.progiple.sateevents.factories.storage;
 
 import lombok.experimental.UtilityClass;
-import org.satellite.dev.progiple.sateevents.SateEvents;
 import org.satellite.dev.progiple.sateevents.factories.Factory;
 import org.satellite.dev.progiple.sateevents.factories.impl.*;
 import org.satellite.dev.progiple.sateevents.exceptions.FactoryIsNullException;
@@ -40,14 +39,14 @@ public class Factories {
     }
 
     public void register(Factory factory) {
-        var factoryClass = getFactoryClass(factory);
+        var factoryClass = getFactoryProvider(factory);
 
         var map = factories.computeIfAbsent(factoryClass, k -> new HashMap<>());
         map.put(factory.getId(), factory);
     }
 
     public void unregister(Factory factory) {
-        var factoryClass = getFactoryClass(factory);
+        var factoryClass = getFactoryProvider(factory);
 
         var map = factories.get(factoryClass);
         if (map == null) return;
@@ -55,21 +54,21 @@ public class Factories {
         map.remove(factory.getId(), factory);
     }
 
-    public Class<? extends Factory> getFactoryClass(Factory factory) {
-        return getFactoryClass(factory.getClass());
+    public Class<? extends Factory> getFactoryProvider(Factory factory) {
+        return getFactoryProvider(factory.getClass());
     }
 
-    public <F extends Factory> Class<? extends Factory> getFactoryClass(Class<F> clazz) {
+    public <F extends Factory> Class<? extends Factory> getFactoryProvider(Class<F> clazz) {
         for (var key : factories.keySet()) {
             if (key.isAssignableFrom(clazz))
                 return key;
         }
 
-        return getFactoryClassWithSuper(clazz);
+        return getFactoryProviderWithSuper(clazz);
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends Factory> getFactoryClassWithSuper(Class<? extends Factory> clazz) {
+    private Class<? extends Factory> getFactoryProviderWithSuper(Class<? extends Factory> clazz) {
         Class<? extends Factory> factoryClass = Factory.class;
         for (Class<?> anInterface : clazz.getInterfaces()) {
             if (factoryClass.isAssignableFrom(anInterface))
@@ -78,7 +77,7 @@ public class Factories {
 
         Class<?> superClass = clazz.getSuperclass();
         if (superClass == null) {
-            return getFactoryClassWithSuper(clazz);
+            return getFactoryProviderWithSuper(clazz);
         }
 
         return (Class<? extends Factory>) superClass;

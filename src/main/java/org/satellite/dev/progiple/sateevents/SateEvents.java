@@ -47,17 +47,8 @@ public final class SateEvents extends LunaPlugin {
             Factories.register(new SateSchematicFactory());
         }
 
-        Remover.removeBossBars();
-        Bukkit.getScheduler().runTask(this, () -> {
-            this.clearDataInStart(sateSchemsIsEnabled);
-            for (var manager : GuardManager.getRegionContainer().getLoaded()) {
-                Set<String> toRemove = manager.getRegions().keySet().stream()
-                        .filter(id -> id.startsWith("sateevent-"))
-                        .collect(Collectors.toSet());
-
-                for (String id : toRemove) manager.removeRegion(id);
-            }
-        });
+        EventUtils.Remover.removeBossBars();
+        Bukkit.getScheduler().runTask(this, () -> this.clearDataInStart(sateSchemsIsEnabled));
 
         if (Config.getBoolean("enableEventScheduler")) {
             new EventStartScheduler().runTaskAsynchronously(this);
@@ -76,20 +67,22 @@ public final class SateEvents extends LunaPlugin {
         if (dir.exists() && dir.isDirectory()) {
             for (File file : dir.listFiles()) {
                 if (file.isFile()) {
-                    Remover.remove(file, sateSchemsIsEnabled);
+                    EventUtils.Remover.remove(file, sateSchemsIsEnabled);
                 }
             }
 
             dir.delete();
         }
+
+        EventUtils.Remover.removeRegions();
     }
 
     private void createPlaceholder() {
         this.createPlaceholder("sateevents", ((offlinePlayer, params) -> {
             if (params.startsWith("parse")) {
-                Parser parser; // sateevents_parse_<parser>_<seconds>
+                Parser parser; // sateevents_parse-<parser>-<seconds>
 
-                String[] split = params.split("_");
+                String[] split = params.split("-");
                 if (split.length == 1) return null;
 
                 long seconds;

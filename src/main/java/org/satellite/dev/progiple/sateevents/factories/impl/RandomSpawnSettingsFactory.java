@@ -15,7 +15,9 @@ import org.satellite.dev.progiple.sateevents.event.realization.settings.spawn.Ra
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @FactoryId("random")
 public class RandomSpawnSettingsFactory implements SpawnSettingsFactory {
@@ -55,13 +57,17 @@ public class RandomSpawnSettingsFactory implements SpawnSettingsFactory {
     }
 
     private static <E> ListSettings<E> generateListSettings(ConfigurationSection section, Function<String, E> map) {
-        if (section == null) return new ListSettings<>(List.of(), FilterType.BLACKLIST);
+        if (section == null) return new ListSettings<>(Set.of(), FilterType.BLACKLIST);
 
         List<String> list = section.getStringList("list");
         FilterType filterType = Utils.getEnumValue(
                 FilterType.class,
                 section.getString("filter"),
                 FilterType.BLACKLIST);
-        return new ListSettings<>(list.stream().map(map).filter(Objects::nonNull).toList(), filterType);
+        return new ListSettings<>(list
+                .stream()
+                .map(map)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet()), filterType);
     }
 }
