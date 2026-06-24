@@ -70,7 +70,6 @@ public final class SateEvents extends LunaPlugin {
                     EventUtils.Remover.remove(file, sateSchemsIsEnabled);
                 }
             }
-
             dir.delete();
         }
 

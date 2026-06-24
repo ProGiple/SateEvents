@@ -13,6 +13,7 @@ import org.satellite.dev.progiple.sateschematics.schems.YAMLSchematic;
 import org.satellite.dev.progiple.sateschematics.schems.pasted.PastedSchematic;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -27,8 +28,11 @@ public class SateSchematicsSettings implements ISchematicSettings<YAMLSchematic,
         this.pastedSchematics = new ArrayList<>();
     }
 
-    protected File generateSaveFile() {
-        return new File(SateEvents.getInstance().getDataFolder(), "saves/" + UUID.randomUUID() + ".yml");
+    protected void save(PastedSchematic schematic) {
+        File file = new File(SateEvents.getInstance().getDataFolder(), "saves/" + UUID.randomUUID() + ".yml");
+        var config = YamlConfiguration.loadConfiguration(file);
+        schematic.save(config.createSection("schem"));
+        try {config.save(file);} catch (IOException ignored) {}
     }
 
     @Override
@@ -39,9 +43,7 @@ public class SateSchematicsSettings implements ISchematicSettings<YAMLSchematic,
         if (schem == null) return null;
 
         pastedSchematics.add(schem);
-        SateEvents.getInstance().async(() -> {
-            schem.save(YamlConfiguration.loadConfiguration(generateSaveFile()));
-        });
+        SateEvents.getInstance().async(() -> save(schem));
 
         return schem;
     }
@@ -54,7 +56,7 @@ public class SateSchematicsSettings implements ISchematicSettings<YAMLSchematic,
         return future.thenApplyAsync(s -> {
             if (s == null) return null;
             pastedSchematics.add(s);
-            s.save(YamlConfiguration.loadConfiguration(generateSaveFile()));
+            save(s);
             return s;
         }, r -> Bukkit.getScheduler().runTaskAsynchronously(SateEvents.getInstance(), r));
     }
